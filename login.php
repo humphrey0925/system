@@ -18,7 +18,6 @@ if ( isset($_POST) && !empty($_POST) ) {
             $data = array('html'=>$main,'status'=>1);
             echo json_encode($data);
             $key = md5($id.$username.$password.$level.$loginip.$loginbrowser.$logintime.$loginkey);
-            $_SESSION['key'] = $key;
             if ( isset($_POST['remember']) && !empty($_POST['remember']) ) {
                 setcookie("key", $key,time() + 60*60*24*365,"/");
             }
@@ -29,22 +28,14 @@ if ( isset($_POST) && !empty($_POST) ) {
         }
         require_once 'db_close.php';
     } else if ( isset($_POST['logout']) && !empty($_POST['logout']) ){
-        $_SESSION = array();
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,$params["path"], $params["domain"],$params["secure"], $params["httponly"]);
-        }
         setcookie("key", '', time() - 42000,"/");
-        // session_destroy();
         $data = array('status'=>9,'html'=>$login);
         echo json_encode($data);
     }
 } else {
-    session_start();
-    
 ?>
     <!DOCTYPE html>
-    <html lang="en">
+    <html>
 
     <head>
         <meta charset="UTF-8">
@@ -64,8 +55,7 @@ if ( isset($_POST) && !empty($_POST) ) {
     </head>
 
     <body>
-        <?php 
-        if( isset($_COOKIE['key']) && !empty(isset($_COOKIE['key'])) || isset($_SESSION['key']) ) { main(); } else { login(); } ?>
+        <?php if( isset($_COOKIE['key']) && !empty(isset($_COOKIE['key'])) ) { main(); } else { login(); } ?>
     </body>
 
     </html>

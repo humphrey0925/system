@@ -8,11 +8,7 @@ $.ajaxSetup({
     if ($.cookie('key') == undefined) {
         _initLoginForm();
     } else {
-        $("ul.nav li.dropdown").hover(function() {
-            $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeIn(100), $(this).find("a").attr("aria-expanded", "true"), $(this).addClass("open")
-        }, function() {
-            $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeOut(100), $(this).find("a").attr("aria-expanded", "false"), $(this).removeClass("open")
-        });
+        _initMain();
     }
 })(jQuery);
 
@@ -81,8 +77,17 @@ function _initLoginForm() {
     });
 }
 
+function _initMain() {
+    $("ul.nav li.dropdown").hover(function() {
+        $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeIn(100), $(this).find("a").attr("aria-expanded", "true"), $(this).addClass("open")
+    }, function() {
+        $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeOut(100), $(this).find("a").attr("aria-expanded", "false"), $(this).removeClass("open")
+    });
+}
+
 function _login(form) {
     if ($(form).valid()) {
+        $(form).find('.login-form-main-message').removeClass('show error success');
         var data = new FormData(form);
         $.ajax({
                 data: data
@@ -90,6 +95,7 @@ function _login(form) {
                 if (data.status == 1) {
                     $('#login').remove();
                     $('body').append(data.html);
+                    _initMain();
                     console.log("success", data);
                 } else {
                     $(form).find('[type=submit]').prop('disabled', false).removeClass('error success clicked').html(msg['btn-default']);
