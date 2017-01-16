@@ -52,6 +52,7 @@
                 
             </ul>
         </li>
+        <li>系統更新資訊</li>
                 </ul>
         	
     <!- 指定right_container2.html連結給右頁框 -->

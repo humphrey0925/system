@@ -14,7 +14,7 @@
     
 		mysqli_query($dbc,"SET NAMES 'UTF8'");
  
-		$insert = "select * FROM `customer_list`";
+		$insert = "SELECT * FROM `customer_list`";
     mysqli_query($dbc, $insert);
   
   	
