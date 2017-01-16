@@ -27,7 +27,8 @@
 	$insert = "INSERT INTO list (name, start_year, start_month,start_day,finish_year, finish_month,finish_day, complish) VALUES ('$name' , $start_year,$start_month,$start_day
 	,$finish_year,$finish_month, $finish_day,0)";
     mysqli_query($dbc, $insert);
-	$query = "SELECT *FROM list";
+	$query = "INSERT INTO `access_we` (name, start_year, start_month,start_day,finish_year, finish_month,finish_day, complish) VALUES ('$name' , $start_year,$start_month,$start_day
+	,$finish_year,$finish_month, $finish_day,0)";
     mysqli_query($dbc, $query);
     echo "完成";
 	if(!$dbc)
