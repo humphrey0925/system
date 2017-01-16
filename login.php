@@ -1,12 +1,10 @@
 <?php
 if ( isset($_POST)  && !empty($_POST) ) {
-    header('Content-Type:text/plain');
-    print_r($_POST);
     echo date("l y/m/d h:i:sa",$_SERVER['REQUEST_TIME'])."\n";
-    require_once 'db_connect.php';
-    $query = $db->prepare("SELECT *  FROM `account` WHERE `username` = ? and `password` = ?");
-    $query->bind_param("ss", $username,$password);
     if ( isset($_POST['username'])  && !empty($_POST['username']) && isset($_POST['password'])  && !empty($_POST['password']) ) {
+        require_once 'db_connect.php';
+        $query = $db->prepare("SELECT *  FROM `user` WHERE `username` = ? and `password` = ?");
+        $query->bind_param("ss", $username,$password);
         $username = $_POST['username'];
         $password = $_POST['password'];
         $query->execute();
