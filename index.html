@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>隆易水電工程進度回報系統</title>
+</head>
+
+<frameset rows="10%,80%,10%" cols="*"  border="3" framespacing="1" frameborder="1">
+    
+    <!- 上方頁框內容為top.html -->
+    <!- scrolling="no" 控制frame為不可以捲動 -->
+    <!- name="top"為定義上頁框的標籤 -->
+    <frame src="head.html" name="top" scrolling="no" />
+    
+    <!- 分割左右頁框比為2比8 -->
+    <!- framespacing為控制兩個frame之間的距離 -->
+    <!- frameborder為控制frame外框的粗細 -->
+    <!- border為控制外框粗細，若不要外框便設成0 -->
+    <frameset rows="50%" cols="30%,70%" frameborder="1" framespacing="1" border="0">
+        
+        <!- scrolling="auto" 控制frame為可以捲動 -->
+        <!- 左方頁框內容為left.html -->
+        <!- name="left"為定義左頁框的標籤 -->
+        <frame src="control.php" name="left" scrolling="auto" />
+        <!- 右方頁框內容為right.html -->
+        <!- name="right"為定義右頁框的標籤 -->
+        <frame src="now.php" name="right" scrolling="auto" />
+    </frameset>
+    <frame src="buttom.html" name="buttom" scrolling="no" />
+</frameset>
+<noframes></noframes>
+<body>
+</body>
+</html>
