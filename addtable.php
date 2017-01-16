@@ -6,7 +6,6 @@
 </head>
 
 <?php
-
 	$name=$_GET['name'];
 	$start_year=$_GET['start_year'];
 	$start_month=$_GET['start_month'];
@@ -34,7 +33,7 @@
 	if(!$dbc)
 	{
 		echo "wrong connect";
-		}
+	}
 		
 ?>
 <script>
