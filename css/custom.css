@@ -1,0 +1,315 @@
+html,
+body {
+    background: #efefef;
+    padding: 0;
+    margin: 0;
+}
+
+* {
+    font-family: 'Varela Round';
+    transition: all ease-in-out 200ms;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+button:focus {
+    outline: 0;
+}
+
+#login {
+    z-index: 1;
+    position: fixed;
+    width: 275px;
+    min-width: 275px;
+    margin: auto;
+    left: 7.5px;
+    right: 15px;
+    opacity: 0;
+    top: 0;
+    bottom: 0;
+    height: 260px;
+}
+
+#login a {
+    color: #aaaaaa;
+}
+
+#login a:hover {
+    color: #333333;
+}
+
+#login .etc-login-form {
+    color: #919191;
+    padding: 10px 20px;
+}
+
+#login .etc-login-form p {
+    margin-bottom: 5px;
+}
+
+#login .login-form-1 {
+    max-width: 300px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+#login .main-login-form {
+    position: relative;
+}
+
+#login .login-form-1 .form-control {
+    border: 0;
+    box-shadow: 0 0 0;
+    border-radius: 0;
+    background: transparent;
+    color: #555555;
+    padding: 7px 0;
+    font-weight: bold;
+    height: auto;
+}
+
+#login .login-form-1 .form-control::-webkit-input-placeholder {
+    color: #999999;
+}
+
+#login .login-form-1 .form-control:-moz-placeholder,
+#login .login-form-1 .form-control::-moz-placeholder,
+#login .login-form-1 .form-control:-ms-input-placeholder {
+    color: #999999;
+}
+
+#login .login-form-1 .form-group {
+    margin-bottom: 0;
+    border-bottom: 2px solid #efefef;
+    padding-right: 20px;
+    position: relative;
+}
+
+#login .login-form-1 .form-group:last-child {
+    border-bottom: 0;
+}
+
+#login .login-group {
+    background: #ffffff;
+    color: #999999;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+#login .login-group-checkbox {
+    padding: 5px 0;
+}
+
+#login .login-form-1 .login-button {
+    position: absolute;
+    right: -25px;
+    top: 50%;
+    background: #ffffff;
+    color: #999999;
+    padding: 11px 0;
+    width: 50px;
+    height: 50px;
+    margin-top: -25px;
+    border: 5px solid #efefef;
+    border-radius: 50%;
+    transition: all ease-in-out 500ms;
+}
+
+#login .login-form-1 .login-button:hover {
+    color: #555555;
+    transform: rotate(450deg);
+}
+
+#login .login-form-1 .login-button.clicked {
+    color: #555555;
+}
+
+#login .login-form-1 .login-button.clicked:hover {
+    transform: none;
+}
+
+#login .login-form-1 .login-button.clicked.success {
+    color: #2ecc71;
+}
+
+#login .login-form-1 .login-button.clicked.error {
+    color: #e74c3c;
+}
+
+#login label.form-invalid {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+    display: block;
+    margin-top: -25px;
+    padding: 7px 9px;
+    background: #777777;
+    color: #ffffff;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+#login label.form-invalid:after {
+    top: 100%;
+    right: 10px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: transparent;
+    border-top-color: #777777;
+    border-width: 6px;
+}
+
+#login .login-form-main-message {
+    background: #ffffff;
+    color: #999999;
+    border-left: 3px solid transparent;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    height: 0;
+    padding: 0 20px 0 17px;
+    opacity: 0;
+    transition: all ease-in-out 200ms;
+}
+
+#login .login-form-main-message.show {
+    height: auto;
+    opacity: 1;
+    padding: 10px 20px 10px 17px;
+}
+
+#login .login-form-main-message.success {
+    border-left-color: #2ecc71;
+}
+
+#login .login-form-main-message.error {
+    border-left-color: #e74c3c;
+}
+
+#login [type="checkbox"]:not(:checked),
+#login [type="checkbox"]:checked,
+#login [type="radio"]:not(:checked),
+#login [type="radio"]:checked {
+    position: absolute;
+    left: -9999px;
+}
+
+#login [type="checkbox"]:not(:checked) + label,
+#login [type="checkbox"]:checked + label,
+#login [type="radio"]:not(:checked) + label,
+#login [type="radio"]:checked + label {
+    position: relative;
+    padding-left: 25px;
+    padding-top: 1px;
+    cursor: pointer;
+}
+
+#login [type="checkbox"]:not(:checked) + label:before,
+#login [type="checkbox"]:checked + label:before,
+#login [type="radio"]:not(:checked) + label:before,
+#login [type="radio"]:checked + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 17px;
+    height: 17px;
+    border: 0px solid #aaa;
+    background: #f0f0f0;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#login [type="checkbox"]:not(:checked) + label:after,
+#login [type="checkbox"]:checked + label:after,
+#login [type="radio"]:not(:checked) + label:after,
+#login [type="radio"]:checked + label:after {
+    position: absolute;
+    color: #555555;
+    transition: all .2s;
+}
+
+#login [type="checkbox"]:not(:checked) + label:after,
+#login [type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    transform: scale(0);
+}
+
+#login [type="checkbox"]:checked + label:after,
+#login [type="radio"]:checked + label:after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#login [type="checkbox"]:disabled:not(:checked) + label:before,
+#login [type="checkbox"]:disabled:checked + label:before,
+#login [type="radio"]:disabled:not(:checked) + label:before,
+#login [type="radio"]:disabled:checked + label:before {
+    box-shadow: none;
+    border-color: #8c8c8c;
+    background-color: #878787;
+}
+
+#login [type="checkbox"]:disabled:checked + label:after,
+#login [type="radio"]:disabled:checked + label:after {
+    color: #555555;
+}
+
+#login [type="checkbox"]:disabled + label,
+#login [type="radio"]:disabled + label {
+    color: #8c8c8c;
+}
+
+#login [type="checkbox"]:checked:focus + label:before,
+#login [type="checkbox"]:not(:checked):focus + label:before,
+#login [type="checkbox"]:checked:focus + label:before,
+#login [type="checkbox"]:not(:checked):focus + label:before {
+    border: 1px dotted #f6f6f6;
+}
+
+#login label:hover:before {
+    border: 1px solid #f6f6f6 !important;
+}
+
+#login [type="checkbox"]:not(:checked) + label:before,
+#login [type="checkbox"]:checked + label:before {
+    border-radius: 3px;
+}
+
+#login [type="radio"]:not(:checked) + label:before,
+#login [type="radio"]:checked + label:before {
+    border-radius: 35px;
+}
+
+#login [type="checkbox"]:not(:checked) + label:after,
+#login [type="checkbox"]:checked + label:after {
+    content: '✔';
+    top: 0;
+    left: 2px;
+    font-size: 14px;
+}
+
+#login [type="radio"]:not(:checked) + label:after,
+#login [type="radio"]:checked + label:after {
+    content: '\2022';
+    top: 0;
+    left: 3px;
+    font-size: 30px;
+    line-height: 25px;
+}
+
+#login .logo {
+    padding: 15px 0;
+    font-size: 25px;
+    color: #aaaaaa;
+    font-weight: bold;
+}
