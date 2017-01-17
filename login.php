@@ -139,7 +139,7 @@ if ( isset($_POST) && !empty($_POST) ) {
     </head>
 
     <body>
-        <?php if( isset($_COOKIE['key']) && !empty($_COOKIE['key']) ) { main(); } else { login(); } ?>
+        <?php if( checkCookie() ) { main(); } else { login(); } ?>
     </body>
 
     </html>
@@ -152,24 +152,43 @@ function main(){
     echo $GLOBALS['navbar'].$GLOBALS['maincontent'];
 }
 function ipCheck() {
-        if (getenv('HTTP_CLIENT_IP')) {
-            $ip = getenv('HTTP_CLIENT_IP');
-        }
-        elseif (getenv('HTTP_X_FORWARDED_FOR')) {
-            $ip = getenv('HTTP_X_FORWARDED_FOR');
-        }
-        elseif (getenv('HTTP_X_FORWARDED')) {
-            $ip = getenv('HTTP_X_FORWARDED');
-        }
-        elseif (getenv('HTTP_FORWARDED_FOR')) {
-            $ip = getenv('HTTP_FORWARDED_FOR');
-        }
-        elseif (getenv('HTTP_FORWARDED')) {
-            $ip = getenv('HTTP_FORWARDED');
-        }
-        else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
+    if (getenv('HTTP_CLIENT_IP')) {
+        $ip = getenv('HTTP_CLIENT_IP');
     }
+    elseif (getenv('HTTP_X_FORWARDED_FOR')) {
+        $ip = getenv('HTTP_X_FORWARDED_FOR');
+    }
+    elseif (getenv('HTTP_X_FORWARDED')) {
+        $ip = getenv('HTTP_X_FORWARDED');
+    }
+    elseif (getenv('HTTP_FORWARDED_FOR')) {
+        $ip = getenv('HTTP_FORWARDED_FOR');
+    }
+    elseif (getenv('HTTP_FORWARDED')) {
+         $ip = getenv('HTTP_FORWARDED');
+    }
+    else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
+}
+function checkCookie()
+{
+    if (isset($_COOKIE['key'])&&!empty($_COOKIE['key'])) {
+        require_once 'db_connect.php';
+        $query = $db->prepare("SELECT * FROM `user` WHERE `loginkey` = ?");
+        $query->bind_param("s", $_COOKIE['key']);
+        $query->execute();
+        $query->store_result();
+        if($query->num_rows()===1){
+            return true;
+        }else{
+            return false;
+        }
+        require_once 'db_close.php';
+    } else {
+        return false;
+    }
+    
+}
 ?>
