@@ -42,21 +42,20 @@ function form_failed($form) {
     $form.find('.login-form-main-message').addClass('show error').html(msg['msg-error']);
 }
 
-function _search() {
+function _logout() {
     var data = new FormData();
     data.append('logout', $.cookie('key'));
     $.ajax({
             data: data
         })
         .done(function(data) {
-            $('body').text('');
-            $('body').append(data.html);
+            $('body').text('').append(data.html);
             _initLoginForm();
             $.removeCookie('key', { path: '/' })
             $.removeCookie('session', { path: '/' })
         })
         .fail(function(data) {
-            console.log("error", data);
+            console.log("error");
         })
         .always(function(data) {
             console.log("complete");

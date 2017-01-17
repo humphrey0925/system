@@ -1,5 +1,5 @@
 <?php
-$maincontent = '<div class="container-fluid">qe5g61v6sd1v615dv6a45df6a4df6a45f654adf654dsf64sdf64sd6f4sd6f4s6d4f6sd4f6s5d4f6s5d4f6s5d4f6sd4f6s5d4f6sd4f6s5d4</div>';
+$maincontent = '<div class="container-fluid">qweqwe</div>';
 $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
     <button class="navbar-toggler hidden-sm-up float-xs-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="/**/"></button>
     <a class="navbar-brand" href onclick="mainpage(); event.preventDefault();"">首頁</a>
@@ -30,13 +30,16 @@ $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
                     <a class="dropdown-item" href="#">Another action</a>
                 </div>
             </li>
+            <li class="nav-item float-sm-right">
+                <a onclick="_logout()" class="nav-link" id="logoutButton"><span class="asd"></span></a>
+            </li>
         </ul>
-        <form class="form-inline col-xs-12 col-sm-5 col-md-4 col-lg-3 float-sm-right" style="padding:0" onsubmit="_search();return false;">
-            <button class="btn btn-outline-success" type="submit" style="width:25%">登出</button>
-        </form>
     </div>
 </nav>
 ';
+        // <form class="form-inline col-xs-12 col-sm-5 col-md-4 col-lg-3 float-sm-right" style="padding:0" onsubmit="_search();return false;">
+        //     <button class="btn btn-outline-success" type="submit" style="width:25%">登出</button>
+        // </form>
 $login = '<div class="text-center" id="login" class="col-xs-4 offset-xs-4">
     <div class="logo">login</div>
     <div class="login-form-1">
@@ -131,7 +134,7 @@ if ( isset($_POST) && !empty($_POST) ) {
 
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
         <title>隆易水電工程</title>
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <link rel='stylesheet' href='css/css.css' type='text/css'>
