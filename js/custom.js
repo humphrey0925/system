@@ -52,7 +52,7 @@ function _search() {
             $('body').text('');
             $('body').append(data.html);
             _initLoginForm();
-            console.log(data);
+            $.cookie('key','', { expires: 0, path: '/' })
         })
         .fail(function(data) {
             console.log("error", data);
@@ -78,11 +78,11 @@ function _initLoginForm() {
 }
 
 function _initMain() {
-    $("ul.nav li.dropdown").hover(function() {
-        $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeIn(100), $(this).find("a").attr("aria-expanded", "true"), $(this).addClass("open")
-    }, function() {
-        $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeOut(100), $(this).find("a").attr("aria-expanded", "false"), $(this).removeClass("open")
-    });
+    // $("ul.nav li.dropdown").hover(function() {
+    //     $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeIn(100), $(this).find("a").attr("aria-expanded", "true"), $(this).addClass("open")
+    // }, function() {
+    //     $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeOut(100), $(this).find("a").attr("aria-expanded", "false"), $(this).removeClass("open")
+    // });
 }
 
 function _login(form) {
@@ -96,7 +96,9 @@ function _login(form) {
                     $('#login').remove();
                     $('body').append(data.html);
                     _initMain();
-                    console.log("success", data);
+                    if (data.key) {
+                        $.cookie('key',data.key, { expires: 365, path: '/' })
+                    }
                 } else {
                     $(form).find('[type=submit]').prop('disabled', false).removeClass('error success clicked').html(msg['btn-default']);
                     $(form).find('.login-form-main-message').addClass('show error').html(msg['msg-error']);
