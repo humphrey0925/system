@@ -21,6 +21,18 @@ button:focus {
 .container-fluid{
     margin-top: 54px;
 }
+.navbar-toggleable-xs {
+    clear: both;
+    max-height:none;
+    overflow-y: auto;
+}
+
+@media screen and (min-width:576px) {
+    .navbar-toggleable-xs {
+        clear: none;
+        overflow-y: inherit;
+    }
+}
 #login {
     z-index: 1;
     position: fixed;

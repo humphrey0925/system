@@ -52,7 +52,8 @@ function _search() {
             $('body').text('');
             $('body').append(data.html);
             _initLoginForm();
-            $.cookie('key','', { expires: 0, path: '/' })
+            $.removeCookie('key', { path: '/' })
+            $.removeCookie('session', { path: '/' })
         })
         .fail(function(data) {
             console.log("error", data);
@@ -77,7 +78,17 @@ function _initLoginForm() {
     });
 }
 
+function navMaxHeight() {
+    $('.navbar-toggleable-xs').css('max-height', _height() - 54);
+}
+$(window).resize(function(event) {
+    if ($.cookie('key')) {
+        navMaxHeight();
+    }
+});
+
 function _initMain() {
+    navMaxHeight();
     // $("ul.nav li.dropdown").hover(function() {
     //     $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeIn(100), $(this).find("a").attr("aria-expanded", "true"), $(this).addClass("open")
     // }, function() {
@@ -97,7 +108,12 @@ function _login(form) {
                     $('body').append(data.html);
                     _initMain();
                     if (data.key) {
-                        $.cookie('key',data.key, { expires: 365, path: '/' })
+                        $.cookie('key', data.key, { expires: 365, path: '/' })
+                    } else {
+                        $.cookie('session', data.session, { path: '/' })
+                        window.onbeforeunload = function(evt) {
+                            $.removeCookie('session', { path: '/' })
+                        }
                     }
                 } else {
                     $(form).find('[type=submit]').prop('disabled', false).removeClass('error success clicked').html(msg['btn-default']);
@@ -113,4 +129,16 @@ function _login(form) {
         form_loading($(form));
     }
     return false;
+}
+
+function scrolltop() {
+    $(document).scrollTop(0)
+}
+
+function _width() {
+    return window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName("body")[0].clientWidth
+}
+
+function _height() {
+    return window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName("body")[0].clientHeight
 }
