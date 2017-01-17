@@ -77,17 +77,6 @@ $login = '<div class="text-center" id="login" class="col-xs-4 offset-xs-4">
 // 9 -> logout
 
 if($_GET){
-    echo crypt('ahkui', '$6$ahkui$ahkui$').'<br>';
-    require_once 'db_connect.php';
-    $query = $db->prepare("SELECT * FROM `user` WHERE `username` = ?");
-    $asd = 'ahkui';
-    $query->bind_param("s", $asd);
-    $query->execute();
-    $query->store_result();
-    $query->bind_result($id,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey);
-    $query->fetch();
-    echo($id.'<br>'.$username.'<br>'. $password.'<br>'.$level.'<br>'.$loginpcname.'<br>'.$loginip.'<br>'.$loginbrowser.'<br>'.$logintime.'<br>'.$loginkey);
-    echo "<br>".$_COOKIE['key'];
     exit();
 }
 if ( isset($_POST) && !empty($_POST) ) {
@@ -102,13 +91,13 @@ if ( isset($_POST) && !empty($_POST) ) {
         $query->execute();
         $query->store_result();
         if($query->num_rows()===1){
-            $query->bind_result($id,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey);
+            $query->bind_result($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey);
             $query->fetch();
             $clientname = gethostname();
             $clientip = ipCheck();
             $clientrequesttime = $_SERVER['REQUEST_TIME'];
             $clientbrowser = $_SERVER['HTTP_USER_AGENT'];
-            $md5 = md5($id.$username.$password.$level.$clientname.$clientip.$clientbrowser.$clientrequesttime.$loginkey);
+            $md5 = md5($id.$name.$contact.$username.$password.$level.$clientname.$clientip.$clientbrowser.$clientrequesttime.$loginkey);
             $key = crypt($password, '$6$'.$md5.'$'.$loginkey.'$');
             $loginQuery = $db->prepare("update `user` set `loginip`=?,`loginbrowser`=?,`logintime`=?,`loginkey`=?,`loginpcname`=? where `id`=$id");
             $loginQuery->bind_param("ssiss",$clientip,$clientbrowser,$clientrequesttime,$key,$clientname);
