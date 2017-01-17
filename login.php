@@ -1,5 +1,6 @@
 <?php
-$main = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
+$maincontent = '<div class="container-fluid">qe5g61v6sd1v615dv6a45df6a4df6a45f654adf654dsf64sdf64sd6f4sd6f4s6d4f6sd4f6s5d4f6s5d4f6s5d4f6sd4f6s5d4f6sd4f6s5d4</div>';
+$navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
     <button class="navbar-toggler hidden-sm-up float-xs-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="/**/"></button>
     <a class="navbar-brand" href onclick="mainpage(); event.preventDefault();"">首頁</a>
     <div class="collapse navbar-toggleable-xs" id="navbarResponsive">
@@ -35,7 +36,6 @@ $main = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
         </form>
     </div>
 </nav>
-<div class="container-fluid"></div>
 ';
 $login = '<div class="text-center" id="login" class="col-xs-4 offset-xs-4">
     <div class="logo">login</div>
@@ -110,7 +110,7 @@ if ( isset($_POST) && !empty($_POST) ) {
             $loginQuery = $db->prepare("update `user` set `loginip`=?,`loginbrowser`=?,`logintime`=?,`loginkey`=?,`loginpcname`=? where `id`=$id");
             $loginQuery->bind_param("ssiss",$clientip,$clientbrowser,$clientrequesttime,$key,$clientname);
             $loginQuery->execute();
-            $data = array('html'=>$main,'status'=>1);
+            $data = array('html'=>$navbar.$maincontent,'status'=>1);
             if ( isset($_POST['remember']) && !empty($_POST['remember']) ) {
                 $data['key'] = $key;
             }else{
@@ -157,7 +157,7 @@ function login(){
     echo $GLOBALS['login'];
 }
 function main(){ 
-    echo $GLOBALS['main'];
+    echo $GLOBALS['navbar'].$GLOBALS['maincontent'];
 }
 function ipCheck() {
         if (getenv('HTTP_CLIENT_IP')) {
