@@ -1,56 +1,59 @@
 <?php
 $maincontent = '<div class="container-fluid">qweqwe</div>';
 $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
-        <button class="navbar-toggler hidden-sm-up float-xs-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="/**/"></button>
-        <a class="navbar-brand" href>首頁
-            <span class="sr-only">(current)</span>
-        </a>
-        <div class="collapse navbar-toggleable-xs" id="navbarResponsive">
-            <ul class="nav navbar-nav">
-                <li class="nav-item" onclick>
-                    <a class="nav-link"></a>
-                </li>
-                <li class="nav-item" onclick>
-                    <a class="nav-link">食物</a>
-                </li>
-                <li class="nav-item" onclick>
-                    <a class="nav-link">旅遊</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">地區</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">愛惠浦</a>
-                    <div class="dropdown-menu">
-                        <div class="dropdown-divider"></div>
-                        <h6 class="dropdown-header">濾芯更換</h6>
-                        <a class="dropdown-item" href="#">查詢</a>
-                        <a class="dropdown-item" href="#">需求增加</a>
-                        <a class="dropdown-item" href="#">結案列表</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">完成記錄</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">公司記事</a>
-                        <a class="dropdown-item" href="#">工程記事</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客戶</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">增加</a>
-                        <a class="dropdown-item" href="#">管理</a>
-                    </div>
-                </li>
-                <li class="nav-item float-sm-right">
-                    <a onclick="_logout()" class="nav-link" id="logoutButton">
-                        <span class="asd"></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <button class="navbar-toggler hidden-sm-up float-xs-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="/**/"></button>
+    <a class="navbar-brand" href>首頁
+        <span class="sr-only">(current)</span>
+    </a>
+    <div class="collapse navbar-toggleable-xs" id="navbarResponsive">
+        <ul class="nav navbar-nav">
+            <li class="nav-item" href="#">
+                <a class="nav-link">員工派遣</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">工程</a>
+                <div class="dropdown-menu">
+                    <h6 class="dropdown-header">新增</h6>
+                    <a class="dropdown-item" href="#">工程</a>
+                    <a class="dropdown-item" href="#">水電進度</a>
+                    <div class="dropdown-divider"></div>
+                    <h6 class="dropdown-header">查詢</h6>
+                    <a class="dropdown-item" href="#">材料狀態</a>
+                    <a class="dropdown-item" href="#">水電進度</a>
+                    <a class="dropdown-item" href="#">結案工程</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">愛惠浦</a>
+                <div class="dropdown-menu">
+                    <h6 class="dropdown-header">濾芯更換</h6>
+                    <a class="dropdown-item" href="#">查詢</a>
+                    <a class="dropdown-item" href="#">需求增加</a>
+                    <a class="dropdown-item" href="#">結案列表</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">完成記錄</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">公司記事</a>
+                    <a class="dropdown-item" href="#">工程記事</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客戶</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">增加</a>
+                    <a class="dropdown-item" href="#">管理</a>
+                </div>
+            </li>
+            <li class="nav-item float-sm-right">
+                <a onclick="_logout()" class="nav-link" id="logoutButton">
+                    <span class="asd"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 ';
         // <form class="form-inline col-xs-12 col-sm-5 col-md-4 col-lg-3 float-sm-right" style="padding:0" onsubmit="_search();return false;">
         //     <button class="btn btn-outline-success" type="submit" style="width:25%">登出</button>
