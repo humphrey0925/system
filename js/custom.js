@@ -95,6 +95,34 @@ function _initMain() {
     // });
 }
 
+function getData(type) {
+    var data = new FormData();
+    data.append('get', type);
+    $.ajax({
+            data: data
+        })
+        .done(function(data) {
+            if (data.status == 9) {
+                $('body').text('').append(data.html);
+                _initLoginForm();
+                $.removeCookie('key', { path: '/' })
+                $.removeCookie('session', { path: '/' })
+            } else if (data.status == 100) {
+                $('.container-fluid').remove();
+                $('body').append(data.html);
+                _initMain();
+            }
+
+        })
+        .fail(function() {
+            console.log("error");
+        })
+        .always(function() {
+            console.log("complete");
+        });
+
+}
+
 function _login(form) {
     if ($(form).valid()) {
         $(form).find('.login-form-main-message').removeClass('show error success');

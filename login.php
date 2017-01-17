@@ -3,8 +3,7 @@ date_default_timezone_set('Asia/Taipei');
 header('charset=utf-8');
 $maincontent = '';
 function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey){
-    $GLOBALS['maincontent'] = '
-<div class="container-fluid">
+    $GLOBALS['maincontent'] = '<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12 text-xs-center">
             <h1 style="margin-top:10px;">歡迎 '.$name.' 使用本系統</h1>
@@ -21,15 +20,15 @@ function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcnam
         <div class="col-xs-12 col-md-8 text-xs-center">
             <div class="row">
                 <div class="col-xs-12">
-                    <p>登錄訊息</p>
+                    <h2>登錄訊息</h2>
                 </div>
                 <div class="col-xs-12">
                     <div class="row">
                         <div class="col-xs-6">
-                            <p>上次登錄</p>
+                            <h4>上次登錄</h4>
                         </div>
                         <div class="col-xs-6">
-                            <p>本次登錄</p>
+                            <h4>本次登錄</h4>
                         </div>
                     </div>
                 </div>
@@ -78,17 +77,15 @@ function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcnam
     </div>
         <div class="row">
         <div class="col-xs-12 text-xs-center">
-            <h3>使用後請登出</h3>
+            <h4>使用後請登出</h4>
         </div>
     </div>
 
-</div>
-
-';
+</div>';
 }
 $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
     <button class="navbar-toggler hidden-sm-up float-xs-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="/**/"></button>
-    <a class="navbar-brand" href="#">首頁
+    <a class="navbar-brand" href="#" onclick="getData(\'main\')">首頁
         <span class="sr-only">(current)</span>
     </a>
     <div class="collapse navbar-toggleable-xs" id="navbarResponsive">
@@ -176,6 +173,7 @@ $login = '<div class="text-center" id="login" class="col-xs-4 offset-xs-4">
 // 0 -> login fail
 // 1 -> login success
 // 9 -> logout
+// 100 -> return homepage
 
 if($_GET){
     exit();
@@ -183,7 +181,16 @@ if($_GET){
 require_once 'db_connect.php';
 if ( isset($_POST) && !empty($_POST) ) {
     $data = array();
-    if ( isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['password']) && !empty($_POST['password']) ) {
+    if (isset($_POST['get']) && !empty($_POST['get'])) {
+        if (checkCookie()) {
+            if ($_POST['get']=='main') {
+                main($_POST['get']);
+                $data = array('html'=>$maincontent,'status'=>100);
+            }
+        }else{
+            $data = array('status'=>9,'html'=>$login);
+        }
+    } elseif ( isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['password']) && !empty($_POST['password']) ) {
         $query = $db->prepare("SELECT * FROM `user` WHERE `username` = ? and `password` = ?");
         $query->bind_param("ss", $username,$password);
         $username = $_POST['username'];
@@ -225,7 +232,7 @@ if ( isset($_POST) && !empty($_POST) ) {
         }else{
             $data = array('status'=>0);
         }
-    } else if ( isset($_POST['logout']) && !empty($_POST['logout']) ){
+    } else {
         $data = array('status'=>9,'html'=>$login);
     }
     echo json_encode($data);
@@ -261,7 +268,7 @@ if ( isset($_POST) && !empty($_POST) ) {
 function login(){
     echo $GLOBALS['login'];
 }
-function main(){ 
+function main($mode=''){ 
     $query = $GLOBALS['db']->prepare("SELECT * FROM `user` WHERE `loginkey` = ?");
     $query->bind_param("s", $_COOKIE['key']);
     $query->execute();
@@ -269,7 +276,9 @@ function main(){
     $query->bind_result($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey);
     $query->fetch();
     proccessMain($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey);
-    echo $GLOBALS['navbar'].$GLOBALS['maincontent'];
+    if ( $mode == '' ) {
+        echo $GLOBALS['navbar'].$GLOBALS['maincontent'];
+    }
 }
 function ipCheck() {
     if (getenv('HTTP_CLIENT_IP')) {
