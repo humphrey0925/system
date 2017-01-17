@@ -1,8 +1,94 @@
 <?php
-$maincontent = '<div class="container-fluid">qweqwe</div>';
+date_default_timezone_set('Asia/Taipei');
+header('charset=utf-8');
+$maincontent = '';
+function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey){
+    $GLOBALS['maincontent'] = '
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 text-xs-center">
+            <h1 style="margin-top:10px;">歡迎 '.$name.' 使用本系統</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-4 text-xs-center">
+            <p>
+                <img src="img/profileblank.jpg" alt="" id="userimg">
+            </p>
+            <p>'.$name.'</p>
+            <p>'.$contact.'</p>
+        </div>
+        <div class="col-xs-12 col-md-8 text-xs-center">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>登錄訊息</p>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>上次登錄</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>本次登錄</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>'.$prevbrowser.'</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>'.$loginbrowser.'</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>'.$prevpcname.'</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>'.$loginpcname.'</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>'.$previp.'</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>'.$loginip.'</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>'.date("l y/m/d h:i:sa",$prevtime).'</p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>'.date("l y/m/d h:i:sa",$logintime).'</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-xs-12 text-xs-center">
+            <h3>使用後請登出</h3>
+        </div>
+    </div>
+
+</div>
+
+';
+}
 $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
     <button class="navbar-toggler hidden-sm-up float-xs-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="/**/"></button>
-    <a class="navbar-brand" href>首頁
+    <a class="navbar-brand" href="#">首頁
         <span class="sr-only">(current)</span>
     </a>
     <div class="collapse navbar-toggleable-xs" id="navbarResponsive">
@@ -33,7 +119,7 @@ $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">完成記錄</a>
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">記事</a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="#">公司記事</a>
                     <a class="dropdown-item" href="#">工程記事</a>
@@ -55,9 +141,6 @@ $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
     </div>
 </nav>
 ';
-        // <form class="form-inline col-xs-12 col-sm-5 col-md-4 col-lg-3 float-sm-right" style="padding:0" onsubmit="_search();return false;">
-        //     <button class="btn btn-outline-success" type="submit" style="width:25%">登出</button>
-        // </form>
 $login = '<div class="text-center" id="login" class="col-xs-4 offset-xs-4">
     <div class="logo">login</div>
     <div class="login-form-1">
@@ -97,10 +180,10 @@ $login = '<div class="text-center" id="login" class="col-xs-4 offset-xs-4">
 if($_GET){
     exit();
 }
+require_once 'db_connect.php';
 if ( isset($_POST) && !empty($_POST) ) {
     $data = array();
     if ( isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['password']) && !empty($_POST['password']) ) {
-        require_once 'db_connect.php';
         $query = $db->prepare("SELECT * FROM `user` WHERE `username` = ? and `password` = ?");
         $query->bind_param("ss", $username,$password);
         $username = $_POST['username'];
@@ -109,17 +192,30 @@ if ( isset($_POST) && !empty($_POST) ) {
         $query->execute();
         $query->store_result();
         if($query->num_rows()===1){
-            $query->bind_result($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey);
+            $query->bind_result($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey);
             $query->fetch();
             $clientname = gethostname();
             $clientip = ipCheck();
             $clientrequesttime = $_SERVER['REQUEST_TIME'];
-            $clientbrowser = $_SERVER['HTTP_USER_AGENT'];
+            if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
+                $clientbrowser = "IE";
+            elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Firefox"))
+                $clientbrowser = "Firefox";
+            elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Chrome"))
+                $clientbrowser = "Chrome";
+            elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Safari"))
+                $clientbrowser = "Safari";
+            elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Opera"))
+                $clientbrowser = "Opera";
+            else $clientbrowser = 'N/A';
+            
             $md5 = md5($id.$name.$contact.$username.$password.$level.$clientname.$clientip.$clientbrowser.$clientrequesttime.$loginkey);
             $key = crypt($password, '$6$'.$md5.'$'.$loginkey.'$');
-            $loginQuery = $db->prepare("update `user` set `loginip`=?,`loginbrowser`=?,`logintime`=?,`loginkey`=?,`loginpcname`=? where `id`=$id");
-            $loginQuery->bind_param("ssiss",$clientip,$clientbrowser,$clientrequesttime,$key,$clientname);
+            $loginQuery = $db->prepare("
+                update `user` set `loginip`=?,`loginbrowser`=?,`logintime`=?,`loginkey`=?,`loginpcname`=?,`previp`=?,`prevbrowser`=?,`prevtime`=?,`prevkey`=?,`prevpcname`=? where `id`=$id");
+            $loginQuery->bind_param("ssissssiss",$clientip,$clientbrowser,$clientrequesttime,$key,$clientname,$loginip,$loginbrowser,$logintime,$loginkey,$loginpcname);
             $loginQuery->execute();
+            proccessMain($id,$name,$contact,$username, $password,$level,$clientname,$clientip,$clientbrowser,$clientrequesttime,$key,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey);
             $data = array('html'=>$navbar.$maincontent,'status'=>1);
             if ( isset($_POST['remember']) && !empty($_POST['remember']) ) {
                 $data['key'] = $key;
@@ -129,7 +225,6 @@ if ( isset($_POST) && !empty($_POST) ) {
         }else{
             $data = array('status'=>0);
         }
-        require_once 'db_close.php';
     } else if ( isset($_POST['logout']) && !empty($_POST['logout']) ){
         $data = array('status'=>9,'html'=>$login);
     }
@@ -167,46 +262,47 @@ function login(){
     echo $GLOBALS['login'];
 }
 function main(){ 
+    $query = $GLOBALS['db']->prepare("SELECT * FROM `user` WHERE `loginkey` = ?");
+    $query->bind_param("s", $_COOKIE['key']);
+    $query->execute();
+    $query->store_result();
+    $query->bind_result($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey);
+    $query->fetch();
+    proccessMain($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey);
     echo $GLOBALS['navbar'].$GLOBALS['maincontent'];
 }
 function ipCheck() {
     if (getenv('HTTP_CLIENT_IP')) {
         $ip = getenv('HTTP_CLIENT_IP');
-    }
-    elseif (getenv('HTTP_X_FORWARDED_FOR')) {
+    } elseif (getenv('HTTP_X_FORWARDED_FOR')) {
         $ip = getenv('HTTP_X_FORWARDED_FOR');
-    }
-    elseif (getenv('HTTP_X_FORWARDED')) {
+    } elseif (getenv('HTTP_X_FORWARDED')) {
         $ip = getenv('HTTP_X_FORWARDED');
-    }
-    elseif (getenv('HTTP_FORWARDED_FOR')) {
+    } elseif (getenv('HTTP_FORWARDED_FOR')) {
         $ip = getenv('HTTP_FORWARDED_FOR');
-    }
-    elseif (getenv('HTTP_FORWARDED')) {
+    } elseif (getenv('HTTP_FORWARDED')) {
          $ip = getenv('HTTP_FORWARDED');
-    }
-    else {
+    } else {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
     return $ip;
 }
-function checkCookie()
-{
+function checkCookie(){
     if (isset($_COOKIE['key'])&&!empty($_COOKIE['key'])) {
-        require_once 'db_connect.php';
-        $query = $db->prepare("SELECT * FROM `user` WHERE `loginkey` = ?");
+        $query = $GLOBALS['db']->prepare("SELECT `loginkey` FROM `user` WHERE `loginkey` = ?");
         $query->bind_param("s", $_COOKIE['key']);
         $query->execute();
         $query->store_result();
         if($query->num_rows()===1){
             return true;
         }else{
+            setcookie("key", '', 0,'/');
             return false;
         }
-        require_once 'db_close.php';
     } else {
         return false;
     }
-    
 }
+
+require_once 'db_close.php';
 ?>

@@ -32,7 +32,10 @@ button:focus {
 #logoutButton span:before {
     content: "登出";
 }
-
+#userimg{
+    width: 80%;
+    border-radius: 999999px;
+}
 @media screen and (min-width:576px) {
     .navbar-toggleable-xs {
         clear: none;
