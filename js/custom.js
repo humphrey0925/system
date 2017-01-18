@@ -5,7 +5,7 @@ $.ajaxSetup({
     method: 'POST'
 });
 (function($) {
-    if ($.cookie('key') == undefined) {
+    if ($.cookie('key') == undefined && $.cookie('session') == undefined) {
         _initLoginForm();
     } else {
         _initMain();
@@ -19,7 +19,20 @@ var msg = {
     'btn-error': '<i class="fa fa-remove"></i>',
     'msg-success': 'All Good! Redirecting...',
     'msg-error': 'ID or Password Wrong',
+    'msg-server-error': 'Server Error',
 };
+
+function scrolltop() {
+    $(document).scrollTop(0)
+}
+
+function _width() {
+    return window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName("body")[0].clientWidth
+}
+
+function _height() {
+    return window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName("body")[0].clientHeight
+}
 
 function remove_loading($form) {
     $form.find('[type=submit]').prop('disabled', false)
@@ -42,25 +55,20 @@ function form_failed($form) {
     $form.find('.login-form-main-message').addClass('show error').html(msg['msg-error']);
 }
 
-function _logout() {
-    var data = new FormData();
-    data.append('logout', $.cookie('key'));
-    $.ajax({
-            data: data
-        })
-        .done(function(data) {
-            $('body').text('').append(data.html);
-            _initLoginForm();
-            $.removeCookie('key', { path: '/' })
-            $.removeCookie('session', { path: '/' })
-        })
-        .fail(function(data) {
-            console.log("error");
-        })
-        .always(function(data) {
-            console.log("complete");
-        });
+function navMaxHeight() {
+    $('.navbar-toggleable-xs').css('max-height', _height() - 54);
+}
+$(window).resize(function(event) {
+    if ($.cookie('key') || $.cookie('session')) {
+        _initMain();
+    }
+});
 
+function _initMain() {
+    navMaxHeight();
+    if ($('#userimg').length) {
+        $('#userimg').css('height', $('#userimg').css('width'))
+    }
 }
 
 function _initLoginForm() {
@@ -75,24 +83,6 @@ function _initLoginForm() {
     $("#login-form").submit(function(event) {
         return _login(this);
     });
-}
-
-function navMaxHeight() {
-    $('.navbar-toggleable-xs').css('max-height', _height() - 54);
-}
-$(window).resize(function(event) {
-    if ($.cookie('key')) {
-        navMaxHeight();
-    }
-});
-
-function _initMain() {
-    navMaxHeight();
-    // $("ul.nav li.dropdown").hover(function() {
-    //     $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeIn(100), $(this).find("a").attr("aria-expanded", "true"), $(this).addClass("open")
-    // }, function() {
-    //     $(this).find(".dropdown-menu").stop(!0, !0).delay(50).fadeOut(100), $(this).find("a").attr("aria-expanded", "false"), $(this).removeClass("open")
-    // });
 }
 
 function getData(type) {
@@ -123,13 +113,39 @@ function getData(type) {
 
 }
 
+function _logout() {
+    var data = new FormData();
+    data.append('logout', $.cookie('key'));
+    $.ajax({
+            data: data
+        })
+        .done(function(data) {
+            $('body').text('').append(data.html);
+            _initLoginForm();
+            $.removeCookie('key', { path: '/' })
+            $.removeCookie('session', { path: '/' })
+        })
+        .fail(function(data) {
+            console.log(data);
+        })
+        .always(function(data) {
+            console.log("complete");
+        });
+
+}
+
 function _login(form) {
     if ($(form).valid()) {
         $(form).find('.login-form-main-message').removeClass('show error success');
         var data = new FormData(form);
         $.ajax({
                 data: data
-            }).done(function(data) {
+            }).done(function(data) {})
+            .fail(function() {
+                $(form).find('.login-form-main-message').addClass('show error').html(msg['msg-server-error']);
+            })
+            .always(function(data) {
+                $(form).find('[type=submit]').prop('disabled', false).removeClass('error success clicked').html(msg['btn-default']);
                 if (data.status == 1) {
                     $('#login').remove();
                     $('body').append(data.html);
@@ -143,29 +159,10 @@ function _login(form) {
                         }
                     }
                 } else {
-                    $(form).find('[type=submit]').prop('disabled', false).removeClass('error success clicked').html(msg['btn-default']);
                     $(form).find('.login-form-main-message').addClass('show error').html(msg['msg-error']);
                 }
-            })
-            .fail(function(data) {
-                console.log("error", data);
-            })
-            .always(function() {
-                console.log("complete");
             });
         form_loading($(form));
     }
     return false;
-}
-
-function scrolltop() {
-    $(document).scrollTop(0)
-}
-
-function _width() {
-    return window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName("body")[0].clientWidth
-}
-
-function _height() {
-    return window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName("body")[0].clientHeight
 }

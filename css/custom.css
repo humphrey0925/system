@@ -35,6 +35,13 @@ button:focus {
 #userimg{
     width: 80%;
     border-radius: 999999px;
+    background-image: url("../img/profileblank.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 @media screen and (min-width:576px) {
     .navbar-toggleable-xs {
