@@ -90,9 +90,7 @@ $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
     </a>
     <div class="collapse navbar-toggleable-xs" id="navbarResponsive">
         <ul class="nav navbar-nav">
-            <li class="nav-item" href="#">
-                <a class="nav-link">員工派遣</a>
-            </li>
+            
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">工程</a>
                 <div class="dropdown-menu">
@@ -101,6 +99,7 @@ $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
                     <a class="dropdown-item" href="#">水電進度</a>
                     <div class="dropdown-divider"></div>
                     <h6 class="dropdown-header">查詢</h6>
+					<a class="dropdown-item" href="#">工程進度</a>
                     <a class="dropdown-item" href="#">材料狀態</a>
                     <a class="dropdown-item" href="#">水電進度</a>
                     <a class="dropdown-item" href="#">結案工程</a>
@@ -113,6 +112,9 @@ $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
                     <a class="dropdown-item" href="#">查詢</a>
                     <a class="dropdown-item" href="#">需求增加</a>
                     <a class="dropdown-item" href="#">結案列表</a>
+					<h6 class="dropdown-header">客戶</h6>
+                    <a class="dropdown-item" href="#">增加</a>
+                    <a class="dropdown-item" href="#">管理</a>>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -122,13 +124,7 @@ $navbar = '<nav class="navbar navbar-dark bg-inverse navbar-fixed-top">
                     <a class="dropdown-item" href="#">工程記事</a>
                 </div>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">客戶</a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">增加</a>
-                    <a class="dropdown-item" href="#">管理</a>
-                </div>
-            </li>
+            
             <li class="nav-item float-sm-right">
                 <a onclick="_logout()" class="nav-link" id="logoutButton">
                     <span class="asd"></span>
