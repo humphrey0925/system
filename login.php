@@ -2,7 +2,9 @@
 date_default_timezone_set('Asia/Taipei');
 header('charset=utf-8');
 $maincontent = '';
-function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey){
+function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey,$img){
+    $tmpstr1 = ($img=='') ? 'profileblank.jpg' : 'upload/'.$img ;
+    $tmpstr2 = ($img=='') ? '<input id="userimgupload" type="file" style="visibility:hidden;position:absolute" onchange="imageUpload(this)" accept="image/*"/><div id="userimghover" onclick="$(\'#userimgupload\').click();"></div>' : '' ;
     $GLOBALS['maincontent'] = '
 <div class="container-fluid">
     <div class="row">
@@ -12,7 +14,7 @@ function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcnam
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-4 text-xs-center">
-            <div id="userimg"></div>
+            <div id="userimg" style="background-image:url(\'img/'.$tmpstr1.'\')">'.$tmpstr2.'</div>
             <p>'.$name.'</p>
             <p>'.$contact.'</p>
         </div>
@@ -186,32 +188,38 @@ if($_GET){
 //         $data = array('msg'=>'File with that name already exists.','status'=>202);
 //     } 
 $data = array();
-if ( !empty($_FILES) ) {
-    if($_FILES['file_upload']['error'] > 0){
+if ( !empty($_FILES) && checkCookie() ) {
+    if($_FILES['image']['error'] > 0){
         $data = array('msg'=>'upload image error','status'=>205);
-    } elseif (!getimagesize($_FILES['file_upload']['tmp_name'])){
+    } elseif (!getimagesize($_FILES['image']['tmp_name'])){
         $data = array('msg'=>'network not stable','status'=>204);
-    } elseif ($_FILES['file_upload']['type'] != 'image/png' && 
-              $_FILES['file_upload']['type'] != 'image/pjpeg' && 
-              $_FILES['file_upload']['type'] != 'image/jpeg'){
+    } elseif ($_FILES['image']['type'] != 'image/png' && 
+              $_FILES['image']['type'] != 'image/pjpeg' && 
+              $_FILES['image']['type'] != 'image/gif' && 
+              $_FILES['image']['type'] != 'image/jpeg'){
         $data = array('msg'=>'unsupported filetype','status'=>203);
-    } elseif ($_FILES['file_upload']['size'] > 500000){
+    } elseif ($_FILES['image']['size'] > 5120000){
         $data = array('msg'=>'image too big','status'=>202);
     } else {
         $imagename = '';
         if ( isset($_POST) && !empty($_POST) ){
-            $imagename = $_FILES['my-file']['name'].pathinfo($_FILES['my-file']['tmp_name'], PATHINFO_EXTENSION);
+            if ( isset($_POST['type']) && !empty($_POST['type']) ) {
+                
+            } else {
+                $imagename = getCurrentUser('username').'.'.pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            }
         }else{
-            $imagename = getCurrentUser('username').pathinfo($_FILES['my-file']['tmp_name'], PATHINFO_EXTENSION);
+            $imagename = $_FILES['image']['name'];
         }
-        if(file_exists('img/upload/'.$imagename)) {
-            chmod('img/upload/'.$imagename,0755); //Change the file permissions if allowed
-            unlink('img/upload/'.$imagename); //remove the file
-        }
-        if ( !move_uploaded_file($_FILES['file_upload']['tmp_name'], 'img/upload/' . $_FILES['file_upload']['name']) ){
+        removeImage($imagename);
+        if ( !move_uploaded_file($_FILES['image']['tmp_name'], 'img/upload/' . $imagename )){
             $data = array('msg'=>'no permission','status'=>201);
         } else{
-            $data = array('msg'=>'upload image success.','status'=>200);
+            $id = getCurrentUser('id');
+            $loginQuery = $db->prepare("update `user` set `image`=? where `id`=$id");
+            $loginQuery->bind_param("s",$imagename);
+            $loginQuery->execute();
+            $data = array('msg'=>'upload image success.','status'=>200,'image_path'=>'img/upload/' . $imagename);
         }
     }
     echo json_encode($data);
@@ -252,7 +260,8 @@ if ( !empty($_FILES) ) {
                 $previp,
                 $prevbrowser,
                 $prevtime,
-                $prevkey
+                $prevkey,
+                $img
             );
             $query->fetch();
             $clientname = gethostname();
@@ -316,7 +325,8 @@ if ( !empty($_FILES) ) {
                 $loginip,
                 $loginbrowser,
                 $logintime,
-                $loginkey
+                $loginkey,
+                $img
             );
             $data = array('html'=>$navbar.$maincontent,'status'=>1);
             if ( isset($_POST['remember']) && !empty($_POST['remember']) ) {
@@ -394,10 +404,29 @@ function main($mode=''){
         $previp,
         $prevbrowser,
         $prevtime,
-        $prevkey
+        $prevkey,
+        $img
     );
     $query->fetch();
-    proccessMain($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey);
+    proccessMain(
+        $id,
+        $name,
+        $contact,
+        $username, 
+        $password,
+        $level,
+        $loginpcname,
+        $loginip,
+        $loginbrowser,
+        $logintime,
+        $loginkey,
+        $prevpcname,
+        $previp,
+        $prevbrowser,
+        $prevtime,
+        $prevkey,
+        $img
+    );
     if ( $mode == '' ) {
         echo $GLOBALS['navbar'].$GLOBALS['maincontent'];
     }
@@ -457,6 +486,17 @@ function getCurrentUser($col){
         }
     }
 }
-
+function removeImage($imagename){
+    $img = array('jpg','jpeg','gif','png');
+    $ext = pathinfo($imagename, PATHINFO_EXTENSION);
+    $name = basename($imagename,$ext);
+    foreach ($img as $value) {
+        $image = $name.$value;
+        if(file_exists('img/upload/'.$image)) {
+            chmod('img/upload/'.$image,0755);
+            unlink('img/upload/'.$image);
+        }
+    }
+}
 require_once 'db_close.php';
 ?>

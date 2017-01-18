@@ -85,6 +85,25 @@ function _initLoginForm() {
     });
 }
 
+function imageUpload(el) {
+    var data = new FormData();
+    data.append("image", el.files[0]);
+
+    data.append("asd", 'asdwqe');
+    $.ajax({
+            data: data
+        })
+        .done(function(data) {})
+        .fail(function() {})
+        .always(function(data) {
+            if (data.status == 200) {
+                $('#userimghover').remove();
+                $('#userimgupload').remove();
+                $('#userimg').css('background-image','url("'+data.image_path+'")')
+            }
+        });
+}
+
 function getData(type) {
     var data = new FormData();
     data.append('get', type);
