@@ -112,8 +112,8 @@ $navbar = '
                     <a class="dropdown-item" href="#">需求增加</a>
                     <a class="dropdown-item" href="#">結案列表</a>
 					<h6 class="dropdown-header">客戶</h6>
-                    <a class="dropdown-item" href="#">增加</a>
-                    <a class="dropdown-item" href="#">管理</a>>
+                    <a class="dropdown-item" href="#" onclick="customerAdd()">增加</a>
+                    <a class="dropdown-item" href="#" onclick="customerManage()">管理</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -126,7 +126,7 @@ $navbar = '
             
             <li class="nav-item float-sm-right">
                 <a onclick="_logout()" class="nav-link" id="logoutButton">
-                    <span class="asd"></span>
+                    <span></span>
                 </a>
             </li>
         </ul>
@@ -170,14 +170,52 @@ $login = '
 // 1 -> login success
 // 9 -> logout
 // 100 -> return homepage
+// 200 -> upload image success
+// 201 -> no permission
+// 202 -> image too big
+// 203 -> unsupported filetype
+// 204 -> network not stable
+// 205 -> upload image error
 require_once 'db_connect.php';
 
 if($_GET){
-    main();
+    echo '<pre>';
     exit();
 }
-if ( isset($_POST) && !empty($_POST) ) {
-    $data = array();
+// elseif (file_exists('upload/' . $_FILES['file_upload']['name'])){
+//         $data = array('msg'=>'File with that name already exists.','status'=>202);
+//     } 
+$data = array();
+if ( !empty($_FILES) ) {
+    if($_FILES['file_upload']['error'] > 0){
+        $data = array('msg'=>'upload image error','status'=>205);
+    } elseif (!getimagesize($_FILES['file_upload']['tmp_name'])){
+        $data = array('msg'=>'network not stable','status'=>204);
+    } elseif ($_FILES['file_upload']['type'] != 'image/png' && 
+              $_FILES['file_upload']['type'] != 'image/pjpeg' && 
+              $_FILES['file_upload']['type'] != 'image/jpeg'){
+        $data = array('msg'=>'unsupported filetype','status'=>203);
+    } elseif ($_FILES['file_upload']['size'] > 500000){
+        $data = array('msg'=>'image too big','status'=>202);
+    } else {
+        $imagename = '';
+        if ( isset($_POST) && !empty($_POST) ){
+            $imagename = $_FILES['my-file']['name'].pathinfo($_FILES['my-file']['tmp_name'], PATHINFO_EXTENSION);
+        }else{
+            $imagename = getCurrentUser('username').pathinfo($_FILES['my-file']['tmp_name'], PATHINFO_EXTENSION);
+        }
+        if(file_exists('img/upload/'.$imagename)) {
+            chmod('img/upload/'.$imagename,0755); //Change the file permissions if allowed
+            unlink('img/upload/'.$imagename); //remove the file
+        }
+        if ( !move_uploaded_file($_FILES['file_upload']['tmp_name'], 'img/upload/' . $_FILES['file_upload']['name']) ){
+            $data = array('msg'=>'no permission','status'=>201);
+        } else{
+            $data = array('msg'=>'upload image success.','status'=>200);
+        }
+    }
+    echo json_encode($data);
+} elseif ( isset($_POST) && !empty($_POST) ) {
     if (isset($_POST['get']) && !empty($_POST['get'])) {
         if (checkCookie()) {
             if ($_POST['get']=='main') {
@@ -405,20 +443,19 @@ function getKey(){
     else
         return $_COOKIE['session'];
 }
-function getCurrentUserID(){
+function getCurrentUser($col){
     if (isset($_COOKIE['key'])&&!empty($_COOKIE['key'])) {
-        $query = $GLOBALS['db']->prepare("SELECT `id` FROM `user` WHERE `loginkey` = ?");
+        $query = $GLOBALS['db']->prepare("SELECT `$col` FROM `user` WHERE `loginkey` = ?");
         $query->bind_param("s", getKey());
         $query->execute();
         $query->store_result();
         if($query->num_rows()===1){
-            $query->bind_result($id);
+            $query->bind_result($data);
             $query->fetch();
             $query->close();
-            return $id;
+            return $data;
         }
     }
-    // return false;
 }
 
 require_once 'db_close.php';
