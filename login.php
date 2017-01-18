@@ -13,7 +13,7 @@ function proccessMain($id,$name,$contact,$username, $password,$level,$loginpcnam
     <div class="row">
         <div class="col-xs-12 col-md-4 text-xs-center">
             <div id="userimg"></div>
-            <p>'.getCurrentUserID().$name.'</p>
+            <p>'.$name.'</p>
             <p>'.$contact.'</p>
         </div>
         <div class="col-xs-12 col-md-8 text-xs-center">
