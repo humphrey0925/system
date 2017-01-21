@@ -9,6 +9,7 @@
         die("连接失败: " . $db->connect_error);
         exit();
     }
+    define('IS_AJAX', !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' );
     $db->query("SET NAMES UTF8");
     // $db;
 ?>
