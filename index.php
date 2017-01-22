@@ -11,11 +11,11 @@ $login = '
                 <div class="login-group">
                     <div class="form-group">
                         <label for="username" class="sr-only">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="username">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="username" autofocus autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="password" class="sr-only">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="password">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="password" autocomplete="off">
                     </div>
                     <div class="form-group login-group-checkbox">
                         <input type="checkbox" id="remember" name="remember">
@@ -138,6 +138,11 @@ $navbar = '
             content: "\ea13";
         }
     }
+    .white_shadow_box {
+        background-color: #FCFCFC;
+        box-shadow: 1px 1px 5px grey;
+    }
+
     </style>
 </nav>
 ';
@@ -165,7 +170,7 @@ function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpc
                             <div class="col-12" style="padding: 0 0 5px 0;">
                                 <h2 style="margin:0;">登錄訊息</h2>
                             </div>
-                            <div class="col-12 col-sm-6" id="prevLoginInfo">
+                            <div class="col-12 col-md-6" id="prevLoginInfo">
                                 <div>
                                     <h4>上次登錄</h4>
                                     <p>'.$prevbrowser.'</p>
@@ -174,7 +179,7 @@ function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpc
                                     <p>'.date("l y/m/d h:i:sa",$prevtime).'</p>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-6" id="currLoginInfo">
+                            <div class="col-12 col-md-6" id="currLoginInfo">
                                 <div>
                                     <h4>本次登錄</h4>
                                     <p>'.$loginbrowser.'</p>
@@ -190,7 +195,7 @@ function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpc
         </div>
     </div>
     <style>
-    @media screen and (min-width:576px) {
+    @media screen and (min-width:768px) {
         #prevLoginInfo {
             padding-right: 0;
         }
@@ -296,12 +301,7 @@ function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpc
         box-shadow: 1px 1px 5px grey;
         width: 100%;
     }
-    
-    .white_shadow_box {
-        background-color: #FCFCFC;
-        box-shadow: 1px 1px 5px grey;
-    }
-    
+        
     #userimg {
         width: 70%;
         border-radius: 999999px;
@@ -344,25 +344,8 @@ $customerAdd = '';
 function processCustomerAdd(){
     $GLOBALS['customerAdd'] = '
     <div class="row justify-content-md-center">
-        <div class="col col-lg-2">
-            1 of 3
-        </div>
         <div class="col-12 col-md-auto">
-            Variable width content
-        </div>
-        <div class="col col-lg-2">
-            3 of 3
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            1 of 3
-        </div>
-        <div class="col-12 col-md-auto">
-            Variable width content
-        </div>
-        <div class="col col-lg-2">
-            3 of 3
+            <div class="white_shadow_box p-2"><div class="row"><div class="col-12"><a>qwe</a></div></div></div>
         </div>
     </div>
 ';
@@ -372,25 +355,8 @@ $customerManage = '';
 function processCustomerManage(){
     $GLOBALS['customerManage'] = '
     <div class="row justify-content-md-center">
-        <div class="col col-lg-2">
-            1 of 3
-        </div>
         <div class="col-12 col-md-auto">
-            Variable width content
-        </div>
-        <div class="col col-lg-2">
-            3 of 3
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            1 of 3
-        </div>
-        <div class="col-12 col-md-auto">
-            Variable width content
-        </div>
-        <div class="col col-lg-2">
-            3 of 3
+            <div class="white_shadow_box p-2"><div class="row"><div class="col-12"><a>qwe</a></div></div></div>
         </div>
     </div>
 ';

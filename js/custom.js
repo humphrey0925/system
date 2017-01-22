@@ -22,11 +22,14 @@ function _initLoginForm() {
     if ($.cookie("key") == undefined && $.cookie("session") == undefined) {
         _initLoginForm();
     }
-    $('body').animate({
-            opacity: 1
-        },
-        300,
-        function() {});
+    $('body').animate({ opacity: 1 }, 300);
+    $(window).on('beforeunload', function() {
+        var iamsadqwe = "qweqw1e12312";
+        console.log(iamsadqwe);
+        if (iamsadqwe=='qweqwe12312') {
+            return true
+        }
+    });
 })(jQuery);
 
 function _login(form) {
@@ -55,20 +58,20 @@ function _login(form) {
                                 $.cookie("key", data.key, { expires: 365, path: "/" });
                             } else {
                                 $.cookie("session", data.session, { path: "/" });
-                                window.onbeforeunload = function(evt) {
+                                $(window).on('beforeunload', function() {
                                     var data = new FormData();
                                     data.append("logout", $.cookie("session"));
                                     $.ajax({ data: data });
                                     $.removeCookie("key", { path: "/" });
                                     $.removeCookie("session", { path: "/" });
 
-                                }
+                                });
                             }
                             $("body").animate({
                                     opacity: 1
                                 },
                                 200,
-                                function() {});;
+                                function() {});
                         });
                 } else {
                     $(form).find(".login-form-main-message").addClass("show error").html(msg["msg-error"]);
@@ -132,6 +135,3 @@ $(document).ajaxStop(function() {
         });
     $(".container-fluid").animate({ opacity: 1 }, 200);
 });
-
-
-
