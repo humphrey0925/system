@@ -126,8 +126,12 @@ $(document).ajaxStart(function() {
     $(".load-bar").animate({ opacity: 1 }, 200);
 });
 $(document).ajaxStop(function() {
-    $(".load-bar").animate({ opacity: 0 },200,
+    $(".load-bar").animate({ opacity: 0 }, 200,
         function() {
             $(".load-bar").css('display', 'none');
         });
+    $(".container-fluid").animate({ opacity: 1 }, 200);
 });
+
+
+
