@@ -812,6 +812,7 @@ if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
         <title>隆易水電工程</title>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/metro-icons.min.css">
+        <link rel="stylesheet" href="css/custom.css">
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <script src="js/jquery-3.1.0.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/tether.min.js" type="text/javascript" charset="utf-8"></script>
@@ -824,8 +825,9 @@ if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
     <body>
         <?php if( checkCookie() ) { main(); } else { login(); } ?>
     </body>
-        <link rel="stylesheet" href="css/custom.css">
-
+<style type="text/css" media="screen">
+    
+</style>
     </html>
     <?php
 }
