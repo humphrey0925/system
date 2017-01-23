@@ -43,9 +43,7 @@
 
 html,
 body {
-    background: #efefef;
-    padding: 0;
-    margin: 0;
+    background: #efefef!important;
     transition: initial;
 }
 
@@ -61,7 +59,7 @@ body {
 #login textarea {
     font-family: 'Varela Round';
     transition: all ease-in-out 200ms;
-    text-decoration: none;
+    text-decoration: none!important;
 }
 
 a:hover {

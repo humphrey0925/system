@@ -34,12 +34,12 @@ $login = '
 </div>
 ';
 $navbar = '
-<nav class="navbar navbar-toggleable navbar-inverse bg-inverse bg-faded fixed-top">
+<nav class="navbar navbar-toggleable navbar-inverse bg-inverse bg-faded fixed-top mh-100">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navDrop" aria-controls="navDrop" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href onclick="getData(\'main\')">首頁</a>
-    <div class="collapse navbar-collapse" id="navDrop">
+    <div class="collapse navbar-collapse mh-100" id="navDrop">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navProject" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">工程</a>
@@ -75,8 +75,8 @@ $navbar = '
                 </div>
             </li>
         </ul>
-        <span class="navbar-text logoutButton">
-            <a onclick="_logout()" class="nav-item" id="logoutButton">
+        <span class="navbar-text logoutButton p-md-0 w-100">
+            <a onclick="_logout()" class="nav-item d-block w-100 h-100 text-center rounded-circle" id="logoutButton">
                 <span></span>
             </a>
         </span>
@@ -86,24 +86,16 @@ $navbar = '
         padding-top: 70px;
     }
     
-    .navbar {
-        max-height: 100%;
-    }
-    
     #navDrop {
-        max-height: 100%;
         overflow-y: auto;
     }
     
     .logoutButton {
-        width: 100%;
         cursor: pointer;
     }
     
     #logoutButton {
         color: #F2F2F2;
-        width: 100%;
-        height: 100%;
     }
     
     #logoutButton span:before {
@@ -116,14 +108,10 @@ $navbar = '
         }
 
         .logoutButton {
-            width: 40px;
-            padding: 0;
+            width: 40px!important;
         }
         #logoutButton {
-            border-radius: 50px;
-            text-align: center;
             border: 4px solid #efefef;
-            display: block;
         }
         #logoutButton:hover {
             border: 4px solid red;
@@ -142,78 +130,6 @@ $navbar = '
         background-color: #FCFCFC;
         box-shadow: 1px 1px 5px grey;
     }
-
-    </style>
-</nav>
-';
-$maininfo = '';
-function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey,$img){
-    $tmpstr1 = ($img=='') ? 'profileblank.jpg' : 'upload/'.$img ;
-    $tmpstr2 = ($img=='') ? '<input id="userimgupload" type="file" style="visibility:hidden;position:absolute" onchange="imageUpload(this)" accept="image/*"/><div id="userimghover" onclick="$(\'#userimgupload\').click();" style="cursor:pointer;"></div>' : '' ;
-    $GLOBALS['maininfo'] = '
-
-    <div class="row">
-        <div class="col-12 col-md-4 text-center">
-            <div class="white_shadow_box" style="padding-top:15px;">
-                <div id="userimg" style="margin-bottom:10px;box-shadow: 1px 1px 10px grey;background-image:url(\'img/'.$tmpstr1.'\')">'.$tmpstr2.'</div>
-                <div style="margin-top: 5px;padding: 20px 0;background-color: skyblue;">
-                    <h3 style="margin:0;padding-bottom:5px;">'.$name.'</h3>
-                    <h4 style="margin:0;padding-top:5px;">'.$contact.'</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-8 text-center login_info">
-            <div class="row">
-                <div class="col-12">
-                    <div class="white_shadow_box" style="padding: 10px 0 0px 0;">
-                        <div class="row">
-                            <div class="col-12" style="padding: 0 0 5px 0;">
-                                <h2 style="margin:0;">登錄訊息</h2>
-                            </div>
-                            <div class="col-12 col-md-6" id="prevLoginInfo">
-                                <div>
-                                    <h4>上次登錄</h4>
-                                    <p>'.$prevbrowser.'</p>
-                                    <p>'.$prevpcname.'</p>
-                                    <p>'.$previp.'</p>
-                                    <p>'.date("l y/m/d h:i:sa",$prevtime).'</p>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6" id="currLoginInfo">
-                                <div>
-                                    <h4>本次登錄</h4>
-                                    <p>'.$loginbrowser.'</p>
-                                    <p>'.$loginpcname.'</p>
-                                    <p>'.$loginip.'</p>
-                                    <p>'.date("l y/m/d h:i:sa",$logintime).'</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <style>
-    @media screen and (min-width:768px) {
-        #prevLoginInfo {
-            padding-right: 0;
-        }
-        #currLoginInfo {
-            padding-left: 0;
-        }
-    }
-    
-    #prevLoginInfo > div {
-        background-color: antiquewhite;
-        padding: 0 0 5px 0;
-    }
-    
-    #currLoginInfo > div {
-        background-color: lightcyan;
-        padding: 0 0 5px 0;
-    }
-    
     .row,
     .col,
     .col-1,
@@ -283,6 +199,67 @@ function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpc
     .container-fulid {
         transition: initial;
     }
+
+    </style>
+</nav>
+';
+$maininfo = '';
+function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey,$img){
+    $tmpstr1 = ($img=='') ? 'profileblank.jpg' : 'upload/'.$img ;
+    $tmpstr2 = ($img=='') ? '<input id="userimgupload" type="file" style="visibility:hidden;position:absolute" onchange="imageUpload(this)" accept="image/*"/><div class="rounded-circle" id="userimghover" onclick="$(\'#userimgupload\').click();" style="cursor:pointer;"></div>' : '' ;
+    $GLOBALS['maininfo'] = '
+    <div class="row">
+        <div class="col-12 col-md-4 text-center">
+            <div class="white_shadow_box pt-3">
+                <div class="rounded-circle mb-3" id="userimg" style="box-shadow: 1px 1px 10px grey;background-image:url(\'img/'.$tmpstr1.'\')">'.$tmpstr2.'</div>
+                <div class="mt-1 py-3" style="background-color: skyblue;">
+                    <h3 class="m-0 pb-1">'.$name.'</h3>
+                    <h4 class="m-0 pt-1">'.$contact.'</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-8 text-center login_info">
+            <div class="row">
+                <div class="col-12">
+                    <div class="white_shadow_box pt-2">
+                        <div class="row">
+                            <div class="col-12 pb-1">
+                                <h2 class="m-0">登錄訊息</h2>
+                            </div>
+                            <div class="col-12 col-md-6 pr-md-0" id="prevLoginInfo">
+                                <div class="pb-1">
+                                    <h4>上次登錄</h4>
+                                    <p>'.$prevbrowser.'</p>
+                                    <p>'.$prevpcname.'</p>
+                                    <p>'.$previp.'</p>
+                                    <p>'.date("l y/m/d h:i:sa",$prevtime).'</p>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 pl-md-0" id="currLoginInfo">
+                                <div class="pb-1">
+                                    <h4>本次登錄</h4>
+                                    <p>'.$loginbrowser.'</p>
+                                    <p>'.$loginpcname.'</p>
+                                    <p>'.$loginip.'</p>
+                                    <p>'.date("l y/m/d h:i:sa",$logintime).'</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+    
+    #prevLoginInfo > div {
+        background-color: antiquewhite;
+    }
+    
+    #currLoginInfo > div {
+        background-color: lightcyan;
+    }
+    
     
     .login_info p {
         margin-top: 5px;
@@ -304,7 +281,6 @@ function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpc
         
     #userimg {
         width: 70%;
-        border-radius: 999999px;
         background-image: url("../img/profileblank.jpg");
         background-size: cover;
         background-repeat: no-repeat;
@@ -323,7 +299,6 @@ function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpc
         right: 0;
         margin: auto;
         position: relative;
-        border-radius: 999999px;
         opacity: 0;
         background-color: transparent;
         background-size: contain;
@@ -365,24 +340,15 @@ processCustomerManage();
 processCustomerAdd();
 
 $footer = '
-<footer>
-    <div class="text-center">
+<footer class="fixed-bottom">
+    <div class="text-center px-3 pb-2">
         <hr>
         <h6>2017© Copyright 隆易水電工程有限公司提醒您 私自竊取資料系屬違法 請勿以身試法</h6>
     </div>
     <style>
-    footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-    
     footer>div {
         background-color: #efefef;
-        padding: 0px 15px 5px 15px;
     }
-    
     .container-fluid {
         margin-bottom: 88px;
     }
@@ -416,13 +382,12 @@ $footer = '
     }
     </style>
 </footer>
-<div class="load-bar">
+<div class="load-bar w-100 fixed-bottom">
     <div class="bar"></div>
     <div class="bar"></div>
     <div class="bar"></div>
     <style>
     .load-bar {
-        width: 100%;
         height: 6px;
         background-color: #fdba2c;
         position: fixed;
@@ -430,6 +395,7 @@ $footer = '
         display: none;
         opacity: 0;
         transition: initial;
+        z-index:9999999;
     }
     
     .bar {
@@ -482,16 +448,10 @@ $js_run_main='$(window).resize(function(event) {    if ($.cookie("key") || $.coo
 $js_function = '
 <script>
 function _initMain() {
-    navMaxHeight();
     if ($("#userimg").length) {
         $("#userimg").css("height", $("#userimg").css("width"));
     }
 }
-
-function navMaxHeight() {
-    // $(".navbar-toggleable").css("max-height", _height() - 54);
-}
-
 function imageUpload(el) {
     var data = new FormData();
     data.append("image", el.files[0]);
@@ -577,9 +537,11 @@ function _logout() {
 // 0 -> login fail
 // 1 -> login success
 // 9 -> logout
+// content
 // 100 -> homepage
 // 101 -> customer add
 // 102 -> customer manage
+// image upload
 // 200 -> upload image success
 // 201 -> no permission
 // 202 -> image too big
@@ -588,7 +550,7 @@ function _logout() {
 // 205 -> upload image error
 
 if($_GET){
-    echo '<pre>';
+    header("Location: ./");
     exit();
 }
 // elseif (file_exists('upload/' . $_FILES['file_upload']['name'])){
@@ -791,9 +753,10 @@ if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
     <body>
         <?php if( checkCookie() ) { main(); } else { login(); } ?>
     </body>
-<style type="text/css" media="screen">
-    
-</style>
+    <style type="text/css" media="screen">
+
+    </style>
+
     </html>
     <?php
 }
