@@ -1,0 +1,168 @@
+<nav class="navbar navbar-toggleable navbar-inverse bg-inverse bg-faded fixed-top mh-100">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navDrop" aria-controls="navDrop" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="main">首頁</a>
+    <div class="collapse navbar-collapse mh-100" id="navDrop">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navProject" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">工程</a>
+                <div class="dropdown-menu" aria-labelledby="navProject">
+                    <h6 class="dropdown-header">新增</h6>
+                    <a class="dropdown-item" href>工程</a>
+                    <a class="dropdown-item" href>水電進度</a>
+                    <div class="dropdown-divider"></div>
+                    <h6 class="dropdown-header">查詢</h6>
+                    <a class="dropdown-item" href>工程進度</a>
+                    <a class="dropdown-item" href>材料狀態</a>
+                    <a class="dropdown-item" href>水電進度</a>
+                    <a class="dropdown-item" href>結案工程</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">愛惠浦</a>
+                <div class="dropdown-menu">
+                    <h6 class="dropdown-header">濾芯更換</h6>
+                    <a class="dropdown-item" href>查詢</a>
+                    <a class="dropdown-item" href>需求增加</a>
+                    <a class="dropdown-item" href>結案列表</a>
+                    <h6 class="dropdown-header">客戶</h6>
+                    <a class="dropdown-item" href="customerAdd">增加</a>
+                    <a class="dropdown-item" href="customerManage">管理</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">記事</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href>公司記事</a>
+                    <a class="dropdown-item" href>工程記事</a>
+                </div>
+            </li>
+        </ul>
+        <span class="navbar-text logoutButton p-md-0 w-100">
+            <a onclick="_logout()" class="nav-item d-block w-100 h-100 text-center rounded-circle" id="logoutButton">
+                <span></span>
+            </a>
+        </span>
+    </div>
+    <style>
+    body {
+        padding-top: 70px
+    }
+    
+    #navDrop {
+        overflow-y: auto
+    }
+    
+    .logoutButton {
+        cursor: pointer
+    }
+    
+    #logoutButton {
+        color: #f2f2f2
+    }
+    
+    #logoutButton span:before {
+        content: "登出"
+    }
+    
+    @media screen and (min-width:576px) {
+        #navDrop {
+            overflow-y: initial
+        }
+        .logoutButton {
+            width: 40px!important
+        }
+        #logoutButton {
+            border: 4px solid #efefef
+        }
+        #logoutButton:hover {
+            border: 4px solid red
+        }
+        #logoutButton span {
+            position: relative;
+            font-family: metro;
+            top: 5px;
+            left: -1.5px
+        }
+        #logoutButton span:before {
+            content: "\ea13"
+        }
+    }
+    
+    .white_shadow_box {
+        background-color: #fcfcfc;
+        box-shadow: 1px 1px 5px grey
+    }
+    
+    .col,
+    .col-1,
+    .col-10,
+    .col-11,
+    .col-12,
+    .col-2,
+    .col-3,
+    .col-4,
+    .col-5,
+    .col-6,
+    .col-7,
+    .col-8,
+    .col-9,
+    .col-lg,
+    .col-lg-1,
+    .col-lg-10,
+    .col-lg-11,
+    .col-lg-12,
+    .col-lg-2,
+    .col-lg-3,
+    .col-lg-4,
+    .col-lg-5,
+    .col-lg-6,
+    .col-lg-7,
+    .col-lg-8,
+    .col-lg-9,
+    .col-md,
+    .col-md-1,
+    .col-md-10,
+    .col-md-11,
+    .col-md-12,
+    .col-md-2,
+    .col-md-3,
+    .col-md-4,
+    .col-md-5,
+    .col-md-6,
+    .col-md-7,
+    .col-md-8,
+    .col-md-9,
+    .col-sm,
+    .col-sm-1,
+    .col-sm-10,
+    .col-sm-11,
+    .col-sm-12,
+    .col-sm-2,
+    .col-sm-3,
+    .col-sm-4,
+    .col-sm-5,
+    .col-sm-6,
+    .col-sm-7,
+    .col-sm-8,
+    .col-sm-9,
+    .col-xl,
+    .col-xl-1,
+    .col-xl-10,
+    .col-xl-11,
+    .col-xl-12,
+    .col-xl-2,
+    .col-xl-3,
+    .col-xl-4,
+    .col-xl-5,
+    .col-xl-6,
+    .col-xl-7,
+    .col-xl-8,
+    .col-xl-9,
+    .container-fulid,
+    .row {
+        transition: initial
+    }
+    </style>
+</nav>

@@ -1,3 +1,18 @@
+(function($) {
+    $(document)
+        .on('dragstart', function(event) { event.preventDefault(); })
+        .on('contextmenu', function(event) { event.preventDefault(); });
+    if ($.cookie("key") == undefined && $.cookie("session") == undefined)
+        _initLoginForm();
+    $('body').animate({ opacity: 1 }, 300);
+    $(window).on('beforeunload', function() {
+        var iamsadqwe = "qweqw1e12312";
+        console.log(iamsadqwe);
+        if (iamsadqwe == 'qweqwe12312') {
+            return true
+        }
+    });
+})(jQuery);
 $.ajaxSetup({
     processData: false,
     contentType: false,
@@ -18,65 +33,50 @@ function _initLoginForm() {
         return _login(this);
     });
 }
-(function($) {
-    if ($.cookie("key") == undefined && $.cookie("session") == undefined) {
-        _initLoginForm();
-    }
-    $('body').animate({ opacity: 1 }, 300);
-    $(window).on('beforeunload', function() {
-        var iamsadqwe = "qweqw1e12312";
-        console.log(iamsadqwe);
-        if (iamsadqwe=='qweqwe12312') {
-            return true
-        }
-    });
-})(jQuery);
 
 function _login(form) {
     if ($(form).valid()) {
         $(form).find(".login-form-main-message").removeClass("show error success");
-        var data = new FormData(form);
-        $.ajax({
-                data: data
-            }).done(function(data) {})
-            .fail(function() {
-                $(form).find(".login-form-main-message").addClass("show error").html(msg["msg-server-error"]);
-            })
-            .always(function(data) {
-                $(form).find("[type=submit]").prop("disabled", false).removeClass("error success clicked").html(msg["btn-default"]);
-                if (data.status == 1) {
-                    $("#login").animate({
-                            opacity: 0
-                        },
-                        200,
-                        function() {
-                            $(this).remove();
-                            $("body").css('opacity', '0').append(data.html);
-                            eval((data.tmp));
-                            _initMain();
-                            if (data.key) {
-                                $.cookie("key", data.key, { expires: 365, path: "/" });
-                            } else {
-                                $.cookie("session", data.session, { path: "/" });
-                                $(window).on('beforeunload', function() {
-                                    var data = new FormData();
-                                    data.append("logout", $.cookie("session"));
-                                    $.ajax({ data: data });
-                                    $.removeCookie("key", { path: "/" });
-                                    $.removeCookie("session", { path: "/" });
+        var ajaxData = { data: new FormData(form) };
+        var ajaxFail = function() {
+            $(form).find(".login-form-main-message").addClass("show error").html(msg["msg-server-error"]);
+        };
+        var ajaxSuccess = function(data) {
+            $(form).find("[type=submit]").prop("disabled", false).removeClass("error success clicked").html(msg["btn-default"]);
+            if (data.status == 1) {
+                $("#login").animate({
+                        opacity: 0
+                    },
+                    200,
+                    function() {
+                        $(this).remove();
+                        $("body").css('opacity', '0').append(data.html);
+                        eval((data.tmp));
+                        _initMain();
+                        if (data.key) {
+                            $.cookie("key", data.key, { expires: 365, path: "/" });
+                        } else {
+                            $.cookie("session", data.session, { path: "/" });
+                            $(window).on('beforeunload', function() {
+                                var data = new FormData();
+                                data.append("logout", $.cookie("session"));
+                                $.ajax({ data: data });
+                                $.removeCookie("key", { path: "/" });
+                                $.removeCookie("session", { path: "/" });
 
-                                });
-                            }
-                            $("body").animate({
-                                    opacity: 1
-                                },
-                                200,
-                                function() {});
-                        });
-                } else {
-                    $(form).find(".login-form-main-message").addClass("show error").html(msg["msg-error"]);
-                }
-            });
+                            });
+                        }
+                        $("body").animate({
+                                opacity: 1
+                            },
+                            200,
+                            function() {});
+                    });
+            } else {
+                $(form).find(".login-form-main-message").addClass("show error").html(msg["msg-error"]);
+            }
+        };
+        $.ajax(ajaxData).fail(ajaxFail).always(ajaxSuccess);
         form_loading($(form));
     }
     return false;

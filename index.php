@@ -1,538 +1,29 @@
 <?php
-date_default_timezone_set('Asia/Taipei');
-header('charset=utf-8');
-$login = '
-<div id="login">
-    <div class="logo">login</div>
-    <div class="login-form-1">
-        <form id="login-form" class="text-left">
-            <div class="login-form-main-message"></div>
-            <div class="main-login-form">
-                <div class="login-group">
-                    <div class="form-group">
-                        <label for="username" class="sr-only">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="username" autofocus autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="sr-only">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="password" autocomplete="off">
-                    </div>
-                    <div class="form-group login-group-checkbox">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">remember</label>
-                    </div>
-                </div>
-                <button type="submit" class="login-button" style="cursor: pointer;"><i class="fa fa-chevron-right"></i></button>
-            </div>
-            <div class="etc-login-form">
-                <p>
-                    <a href>forgot your password?</a>
-                </p>
-            </div>
-        </form>
-    </div>
-</div>
-';
-$navbar = '
-<nav class="navbar navbar-toggleable navbar-inverse bg-inverse bg-faded fixed-top mh-100">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navDrop" aria-controls="navDrop" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href onclick="getData(\'main\')">首頁</a>
-    <div class="collapse navbar-collapse mh-100" id="navDrop">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navProject" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">工程</a>
-                <div class="dropdown-menu" aria-labelledby="navProject">
-                    <h6 class="dropdown-header">新增</h6>
-                    <a class="dropdown-item" href>工程</a>
-                    <a class="dropdown-item" href>水電進度</a>
-                    <div class="dropdown-divider"></div>
-                    <h6 class="dropdown-header">查詢</h6>
-                    <a class="dropdown-item" href>工程進度</a>
-                    <a class="dropdown-item" href>材料狀態</a>
-                    <a class="dropdown-item" href>水電進度</a>
-                    <a class="dropdown-item" href>結案工程</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">愛惠浦</a>
-                <div class="dropdown-menu">
-                    <h6 class="dropdown-header">濾芯更換</h6>
-                    <a class="dropdown-item" href>查詢</a>
-                    <a class="dropdown-item" href>需求增加</a>
-                    <a class="dropdown-item" href>結案列表</a>
-                    <h6 class="dropdown-header">客戶</h6>
-                    <a class="dropdown-item" href onclick="getData(\'customerAdd\')">增加</a>
-                    <a class="dropdown-item" href onclick="getData(\'customerManage\')">管理</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">記事</a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href>公司記事</a>
-                    <a class="dropdown-item" href>工程記事</a>
-                </div>
-            </li>
-        </ul>
-        <span class="navbar-text logoutButton p-md-0 w-100">
-            <a onclick="_logout()" class="nav-item d-block w-100 h-100 text-center rounded-circle" id="logoutButton">
-                <span></span>
-            </a>
-        </span>
-    </div>
-    <style>
-    body {
-        padding-top: 70px;
-    }
-    
-    #navDrop {
-        overflow-y: auto;
-    }
-    
-    .logoutButton {
-        cursor: pointer;
-    }
-    
-    #logoutButton {
-        color: #F2F2F2;
-    }
-    
-    #logoutButton span:before {
-        content: "登出";
-    }
-    
-    @media screen and (min-width:576px) {
-        #navDrop {
-            overflow-y: initial;
-        }
-
-        .logoutButton {
-            width: 40px!important;
-        }
-        #logoutButton {
-            border: 4px solid #efefef;
-        }
-        #logoutButton:hover {
-            border: 4px solid red;
-        }
-        #logoutButton span {
-            position: relative;
-            font-family: metro;
-            top: 5px;
-            left: -1.5px;
-        }
-        #logoutButton span:before {
-            content: "\ea13";
-        }
-    }
-    .white_shadow_box {
-        background-color: #FCFCFC;
-        box-shadow: 1px 1px 5px grey;
-    }
-    .row,
-    .col,
-    .col-1,
-    .col-10,
-    .col-11,
-    .col-12,
-    .col-2,
-    .col-3,
-    .col-4,
-    .col-5,
-    .col-6,
-    .col-7,
-    .col-8,
-    .col-9,
-    .col-lg,
-    .col-lg-1,
-    .col-lg-10,
-    .col-lg-11,
-    .col-lg-12,
-    .col-lg-2,
-    .col-lg-3,
-    .col-lg-4,
-    .col-lg-5,
-    .col-lg-6,
-    .col-lg-7,
-    .col-lg-8,
-    .col-lg-9,
-    .col-md,
-    .col-md-1,
-    .col-md-10,
-    .col-md-11,
-    .col-md-12,
-    .col-md-2,
-    .col-md-3,
-    .col-md-4,
-    .col-md-5,
-    .col-md-6,
-    .col-md-7,
-    .col-md-8,
-    .col-md-9,
-    .col-sm,
-    .col-sm-1,
-    .col-sm-10,
-    .col-sm-11,
-    .col-sm-12,
-    .col-sm-2,
-    .col-sm-3,
-    .col-sm-4,
-    .col-sm-5,
-    .col-sm-6,
-    .col-sm-7,
-    .col-sm-8,
-    .col-sm-9,
-    .col-xl,
-    .col-xl-1,
-    .col-xl-10,
-    .col-xl-11,
-    .col-xl-12,
-    .col-xl-2,
-    .col-xl-3,
-    .col-xl-4,
-    .col-xl-5,
-    .col-xl-6,
-    .col-xl-7,
-    .col-xl-8,
-    .col-xl-9,
-    .container-fulid {
-        transition: initial;
-    }
-
-    </style>
-</nav>
-';
-$maininfo = '';
-function processMainInfo($id,$name,$contact,$username, $password,$level,$loginpcname,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcname,$previp,$prevbrowser,$prevtime,$prevkey,$img){
-    $tmpstr1 = ($img=='') ? 'profileblank.jpg' : 'upload/'.$img ;
-    $tmpstr2 = ($img=='') ? '<input id="userimgupload" type="file" style="visibility:hidden;position:absolute" onchange="imageUpload(this)" accept="image/*"/><div class="rounded-circle" id="userimghover" onclick="$(\'#userimgupload\').click();" style="cursor:pointer;"></div>' : '' ;
-    $GLOBALS['maininfo'] = '
-    <div class="row">
-        <div class="col-12 col-md-4 text-center">
-            <div class="white_shadow_box pt-3">
-                <div class="rounded-circle mb-3" id="userimg" style="box-shadow: 1px 1px 10px grey;background-image:url(\'img/'.$tmpstr1.'\')">'.$tmpstr2.'</div>
-                <div class="mt-1 py-3" style="background-color: skyblue;">
-                    <h3 class="m-0 pb-1">'.$name.'</h3>
-                    <h4 class="m-0 pt-1">'.$contact.'</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-8 text-center login_info">
-            <div class="row">
-                <div class="col-12">
-                    <div class="white_shadow_box pt-2">
-                        <div class="row">
-                            <div class="col-12 pb-1">
-                                <h2 class="m-0">登錄訊息</h2>
-                            </div>
-                            <div class="col-12 col-md-6 pr-md-0" id="prevLoginInfo">
-                                <div class="pb-1">
-                                    <h4>上次登錄</h4>
-                                    <p>'.$prevbrowser.'</p>
-                                    <p>'.$prevpcname.'</p>
-                                    <p>'.$previp.'</p>
-                                    <p>'.date("l y/m/d h:i:sa",$prevtime).'</p>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 pl-md-0" id="currLoginInfo">
-                                <div class="pb-1">
-                                    <h4>本次登錄</h4>
-                                    <p>'.$loginbrowser.'</p>
-                                    <p>'.$loginpcname.'</p>
-                                    <p>'.$loginip.'</p>
-                                    <p>'.date("l y/m/d h:i:sa",$logintime).'</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <style>
-    
-    #prevLoginInfo > div {
-        background-color: antiquewhite;
-    }
-    
-    #currLoginInfo > div {
-        background-color: lightcyan;
-    }
-    
-    
-    .login_info p {
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-    
-    .login_info h4 {
-        margin-top: 0;
-        margin-bottom: 0;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background-color: lightblue;
-    }
-    
-    .login_info .col-6 > div {
-        box-shadow: 1px 1px 5px grey;
-        width: 100%;
-    }
-        
-    #userimg {
-        width: 70%;
-        background-image: url("../img/profileblank.jpg");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        left: 0;
-        right: 0;
-        margin: auto;
-    }
-    
-    #userimghover {
-        width: 100%;
-        height: 100%;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        position: relative;
-        opacity: 0;
-        background-color: transparent;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-image: url("../img/upload.png");
-        transition: opacity ease-in-out 750ms;
-    }
-    
-    #userimghover:hover {
-        opacity: 0.35;
-    }
-    </style>
-
-';
-}
+date_default_timezone_set("Asia/Taipei");
+header("charset=utf-8");
+$login = file_get_contents("sourcecode/loginform.min.html");
+$navbar = file_get_contents("sourcecode/navbar.min.html");
+$footer = file_get_contents("sourcecode/footer.min.html");
+$js_run_main = file_get_contents("sourcecode/js_run.min.js");
+$js_function = '<script>'.file_get_contents("sourcecode/js_function.min.js").'</script>' ;
+require_once('sourcecode/maininfo.php');
 $customerAdd = '';
-function processCustomerAdd(){
-    $GLOBALS['customerAdd'] = '
-    <div class="row justify-content-md-center">
-        <div class="col-12 col-md-auto">
-            <div class="white_shadow_box p-2"><div class="row"><div class="col-12"><a>qwe</a></div></div></div>
-        </div>
-    </div>
-';
-}
-
 $customerManage = '';
+function processCustomerAdd(){
+    $GLOBALS['customerAdd'] = '<div class="row justify-content-md-center"><div class="col-12 col-md-auto"><div class="white_shadow_box p-2"><div class="row"><div class="col-12"><a>';
+    for ($i=1; $i <= 10; $i++) 
+    $GLOBALS['customerAdd'] .= "$i customerAdd<br>";
+    $GLOBALS['customerAdd'] .= '</a></div></div></div></div></div>';
+}
 function processCustomerManage(){
-    $GLOBALS['customerManage'] = '
-    <div class="row justify-content-md-center">
-        <div class="col-12 col-md-auto">
-            <div class="white_shadow_box p-2"><div class="row"><div class="col-12"><a>qwe</a></div></div></div>
-        </div>
-    </div>
-';
+    $GLOBALS['customerManage'] = '<div class="row justify-content-md-center"><div class="col-12 col-md-auto"><div class="white_shadow_box p-2"><div class="row"><div class="col-12"><a>';
+    for ($i=1; $i <= 10; $i++) 
+    $GLOBALS['customerManage'] .= "$i customerManage<br>";
+    $GLOBALS['customerManage'] .= '</a></div></div></div></div></div>';
 }
 processCustomerManage();
 processCustomerAdd();
 
-$footer = '
-<footer class="fixed-bottom">
-    <div class="text-center px-3 pb-2">
-        <hr>
-        <h6>2017© Copyright 隆易水電工程有限公司提醒您 私自竊取資料系屬違法 請勿以身試法</h6>
-    </div>
-    <style>
-    footer>div {
-        background-color: #efefef;
-    }
-    .container-fluid {
-        margin-bottom: 88px;
-    }
-    
-    footer h6 {
-        font-size: 80%;
-    }
-    
-    @media screen and (min-width:283px) {
-        .container-fluid {
-            margin-bottom: 74px;
-        }
-    }
-    
-    @media screen and (min-width:500px) {
-        .container-fluid {
-            margin-bottom: 74px;
-        }
-        footer h6 {
-            font-size: 85%;
-        }
-    }
-    
-    @media screen and (min-width:576px) {
-        .container-fluid {
-            margin-bottom: 61px;
-        }
-        footer h6 {
-            font-size: 89.5%;
-        }
-    }
-    </style>
-</footer>
-<div class="load-bar w-100 fixed-bottom">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <style>
-    .load-bar {
-        height: 6px;
-        background-color: #fdba2c;
-        position: fixed;
-        bottom: 0;
-        display: none;
-        opacity: 0;
-        transition: initial;
-        z-index:9999999;
-    }
-    
-    .bar {
-        content: "";
-        display: inline;
-        position: absolute;
-        width: 0;
-        height: 100%;
-        left: 50%;
-        text-align: center;
-    }
-    
-    .bar:nth-child(1) {
-        background-color: #da4733;
-        animation: loading 3s linear infinite;
-    }
-    
-    .bar:nth-child(2) {
-        background-color: #3b78e7;
-        animation: loading 3s linear 1s infinite;
-    }
-    
-    .bar:nth-child(3) {
-        background-color: #fdba2c;
-        animation: loading 3s linear 2s infinite;
-    }
-    
-    @keyframes loading {
-        from {
-            left: 50%;
-            width: 0;
-            z-index: 100;
-        }
-        33.3333% {
-            left: 0;
-            width: 100%;
-            z-index: 10;
-        }
-        to {
-            left: 0;
-            width: 100%;
-        }
-    }
-    </style>
-</div>
-';
-
-$js_run_main='$(window).resize(function(event) {    if ($.cookie("key") || $.cookie("session")) { _initMain(); };});_initMain();';
-
-$js_function = '
-<script>
-function _initMain() {
-    if ($("#userimg").length) {
-        $("#userimg").css("height", $("#userimg").css("width"));
-    }
-}
-function imageUpload(el) {
-    var data = new FormData();
-    data.append("image", el.files[0]);
-    data.append("asd", "asdwqe");
-    $.ajax({
-            data: data
-        })
-        .always(function(data) {
-            if (data.status == 200) {
-                $("#userimghover").remove();
-                $("#userimgupload").remove();
-                $("#userimg").css("background-image", "url(\"" + data.image_path + "\")");
-            }
-        });
-}
-
-function getData(type) {
-    event.preventDefault();
-    var data = new FormData();
-    data.append("get", type);
-    $.ajax({
-            data: data,
-            beforeSend: function() {
-                $(".container-fluid").animate({ opacity: 0 }, 200);
-            }
-        })
-        .done(function(data) {
-            if (data.status == 9) {
-                        $("body").text("").append(data.html);
-                        _initLoginForm();
-                        $.removeCookie("key", {
-                            path: "/"
-                        });
-                        $.removeCookie("session", {
-                            path: "/"
-                        });
-            } else if (data.status >= 100 && data.status <= 102) {
-                        $(".container-fluid").text("");
-                        $(".container-fluid").append(data.html);
-                        if (data.status == 100) {
-                            _initMain();
-                        }
-            }
-        })
-        .fail(function() {
-            console.log("error");
-        })
-        .always(function() {
-            console.log("complete");
-        });
-}
-
-function _logout() {
-    var data = new FormData();
-    data.append("logout", "");
-    $.ajax({
-            data: data
-        })
-        .always(function(data) {
-            $("body").animate({
-                    opacity: 0
-                },
-                200,
-                function() {
-                    $("body").text("").append(data.html);
-                    _initLoginForm();
-                    $.removeCookie("key", {
-                        path: "/"
-                    });
-                    $.removeCookie("session", {
-                        path: "/"
-                    });
-                    $(this).animate({
-                            opacity: 1
-                        },
-                        200);
-                });
-        });
-}
-</script>
-';
 // status value meaning
 // 0 -> login fail
 // 1 -> login success
@@ -573,9 +64,7 @@ if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
     } else {
         $imagename = '';
         if ( isset($_POST) && !empty($_POST) ){
-            if ( isset($_POST['type']) && !empty($_POST['type']) ) {
-                
-            } else {
+            if ( isset($_POST['upload']) && !empty($_POST['upload']) && $_POST['upload']=="userimage") {
                 $imagename = getCurrentUser('username').'.'.pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
             }
         }else{
@@ -685,22 +174,16 @@ if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
             );
             $loginQuery->execute();
             processMainInfo(
-                $id,
                 $name,
                 $contact,
-                $username, 
-                $password,
-                $level,
-                $clientname,
-                $clientip,
-                $clientbrowser,
-                $clientrequesttime,
-                $key,
                 $loginpcname,
                 $loginip,
                 $loginbrowser,
                 $logintime,
-                $loginkey,
+                $prevpcname,
+                $previp,
+                $prevbrowser,
+                $prevtime,
                 $img
             );
             $data = array('html'=>$navbar.'<div class="container-fluid">'.$maininfo.'</div>'.$footer.$js_function,'status'=>1,'tmp'=>$js_run_main);
@@ -740,23 +223,19 @@ if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
         <title>隆易水電工程</title>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/metro-icons.min.css">
-        <link rel="stylesheet" href="css/custom.css">
+        <link rel="stylesheet" href="css/custom.min.css">
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <script src="js/jquery-3.1.0.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/tether.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/jquery.validate.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/custom.js" type="text/javascript" charset="utf-8" async defer></script>
+        <script src="js/custom.min.js" type="text/javascript" charset="utf-8" async defer></script>
     </head>
 
     <body>
         <?php if( checkCookie() ) { main(); } else { login(); } ?>
     </body>
-    <style type="text/css" media="screen">
-
-    </style>
-
     </html>
     <?php
 }
@@ -792,22 +271,16 @@ function main($mode=''){
     );
     $query->fetch();
     processMainInfo(
-        $id,
         $name,
         $contact,
-        $username, 
-        $password,
-        $level,
         $loginpcname,
         $loginip,
         $loginbrowser,
         $logintime,
-        $loginkey,
         $prevpcname,
         $previp,
         $prevbrowser,
         $prevtime,
-        $prevkey,
         $img
     );
     if ( $mode == '' ) {
@@ -857,18 +330,17 @@ function getKey(){
         return $_COOKIE['session'];
 }
 function getCurrentUser($col){
-    if (isset($_COOKIE['key'])&&!empty($_COOKIE['key'])) {
-        $query = $GLOBALS['db']->prepare("SELECT ? FROM `user` WHERE `loginkey` = ?");
-        $query->bind_param("ss",$col, getKey());
+    if (checkCookie()) {
+        $query = $GLOBALS['db']->prepare("SELECT `$col` FROM `user` WHERE `loginkey` = ?");
+        $query->bind_param("s", getKey());
         $query->execute();
         $query->store_result();
-        if($query->num_rows()===1){
-            $query->bind_result($data);
-            $query->fetch();
-            $query->close();
-            return $data;
-        }
+        $query->bind_result($data);
+        $query->fetch();
+        $query->close();
+        return $data;
     }
+    return "qweasd";
 }
 function removeImage($imagename){
     $img = array('jpg','jpeg','gif','png');
