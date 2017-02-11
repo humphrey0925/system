@@ -2,7 +2,7 @@
     $(document)
         .on('dragstart', function(event) { event.preventDefault(); })
         .on('contextmenu', function(event) { event.preventDefault(); });
-    if ($.cookie("key") == undefined && $.cookie("session") == undefined)
+    if ($.cookie("_key") == undefined && $.cookie("session") == undefined)
         _initLoginForm();
     $('body').animate({ opacity: 1 }, 300);
     $(window).on('beforeunload', function() {
@@ -54,14 +54,14 @@ function _login(form) {
                         eval((data.tmp));
                         _initMain();
                         if (data.key) {
-                            $.cookie("key", data.key, { expires: 365, path: "/" });
+                            $.cookie("_key", data.key, { expires: 365, path: "/" });
                         } else {
                             $.cookie("session", data.session, { path: "/" });
                             $(window).on('beforeunload', function() {
                                 var data = new FormData();
                                 data.append("logout", $.cookie("session"));
                                 $.ajax({ data: data });
-                                $.removeCookie("key", { path: "/" });
+                                $.removeCookie("_key", { path: "/" });
                                 $.removeCookie("session", { path: "/" });
 
                             });

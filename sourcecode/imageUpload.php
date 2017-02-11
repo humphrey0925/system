@@ -27,7 +27,7 @@ if($_FILES['image']['error'] > 0){
         $loginQuery = $db->prepare("update `user` set `image`=? where `id`=$id");
         $loginQuery->bind_param("s",$imagename);
         $loginQuery->execute();
-        $data = array('status'=>200,'image_path'=>"img/upload/$imagename");
+        $data = array('status'=>200,'image_path'=>"img/upload/$imagename".'?cache='.time());
     }
 }
 echo json_encode($data);

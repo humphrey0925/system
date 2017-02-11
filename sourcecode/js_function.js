@@ -1,33 +1,46 @@
+var dataStorage = {};
 var ajaxSuccess = function(data) {
-    if (data.status == 9) {
-        $("body").animate({
-                opacity: 0
-            }, 200,
-            function() {
-                $("body").text("").append(data.html);
-                _initLoginForm();
-                $.removeCookie("key", {
-                    path: "/"
-                });
-                $.removeCookie("session", {
-                    path: "/"
-                });
-                $(this).animate({
-                        opacity: 1
-                    },
-                    200);
-            });
-    } else if (data.status >= 100 && data.status <= 102) {
-        $(".container-fluid").text("");
-        $(".container-fluid").append(data.html);
-        if (data.status == 100) {
-            _initMain();
+    if (data.status != undefined) {
+        console.log(data, dataStorage)
+        if (data.status == 1000) {
+            data = dataStorage[data.el].cache;
+            console.log("cache")
         }
-    } else if (data.status == 200) {
-        $("#userimghover").remove();
-        $("#userimgupload").remove();
-        $("#userimg").css("background-image", "url(" + data.image_path + ")");
-    }
+        if (data.status == 9) {
+            $("body").animate({
+                    opacity: 0
+                }, 200,
+                function() {
+                    $("body").text("").append(data.html);
+                    _initLoginForm();
+                    $.removeCookie("_key", {
+                        path: "/"
+                    });
+                    $.removeCookie("session", {
+                        path: "/"
+                    });
+                    $(this).animate({
+                            opacity: 1
+                        },
+                        200);
+                });
+        } else if ((data.status >= 100 && data.status <= 104)) {
+            $(".container-fluid").text("");
+            $(".container-fluid").append(data.html);
+            if (data.status == 100) {
+                _initMain();
+            }
+        } else if (data.status >= 200 && data.status <= 205) {
+            if (data.status == 200) {
+                $("#userimghover").remove();
+                $("#userimgupload").remove();
+                $("#userimg").css("background-image", "url(" + data.image_path + ")");
+            } else {
+                alert(data.msg);
+            }
+        } else if ((data.status >= 900 && data.status <= 999)) {}
+        scrolltop()
+    } else {}
 }
 
 function _initMain() {
@@ -45,24 +58,36 @@ function imageUpload(el) {
     $.ajax(ajaxData).always(ajaxSuccess);
 }
 
-$("a.dropdown-item,a.navbar-brand").click(function(){
-    getData($(this).attr("href"))
+$("nav.navbar a.dropdown-item,nav.navbar a.navbar-brand,nav.navbar li.nav-item>a[class=\"nav-link\"]").click(function() {
+    if (_width() < 768 && $(".navbar-collapse").hasClass("show")) {
+        $(".navbar-toggler").click();
+    }
+    getData($(this).attr("href"));
 })
 $(window).resize(function(i) {
-    ($.cookie("key") || $.cookie("session")) && _initMain()
+    ($.cookie("_key") || $.cookie("session")) && _initMain()
 });
+
 function getData(el) {
     event.preventDefault();
     var ajaxData = {
         data: new FormData()
     }
+    if (dataStorage[el] === undefined) dataStorage[el] = {};
+    if (dataStorage[el].cacheTime === undefined) dataStorage[el].cacheTime = 0;
+    ajaxData.data.append("cacheTime", dataStorage[el].cacheTime);
     ajaxData.data.append("get", el);
     ajaxData.beforeSend = function() {
         $(".container-fluid").animate({
             opacity: 0
         }, 200);
     }
-    $.ajax(ajaxData).done(ajaxSuccess);
+    $.ajax(ajaxData).always(ajaxSuccess).done(function(data) {
+        if (data && data.status != 1000) {
+            dataStorage[el].cache = data;
+            dataStorage[el].cacheTime = data.cacheTime;
+        }
+    });
 }
 
 function _logout() {
@@ -71,4 +96,5 @@ function _logout() {
     }
     ajaxData.data.append("logout", "");
     $.ajax(ajaxData).always(ajaxSuccess);
+    dataStorage = {};
 }

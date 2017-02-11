@@ -1,31 +1,31 @@
-<nav class="navbar navbar-toggleable navbar-inverse bg-inverse bg-faded fixed-top mh-100">
+<nav class="navbar navbar-toggleable-sm navbar-inverse bg-inverse bg-faded fixed-top mh-75">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navDrop" aria-controls="navDrop" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="main">首頁</a>
-    <div class="collapse navbar-collapse mh-100" id="navDrop">
+    <div class="collapse navbar-collapse" id="navDrop">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navProject" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">工程</a>
                 <div class="dropdown-menu" aria-labelledby="navProject">
                     <h6 class="dropdown-header">新增</h6>
-                    <a class="dropdown-item" href>工程</a>
-                    <a class="dropdown-item" href>水電進度</a>
+                    <a class="dropdown-item" href="main">工程</a>
+                    <a class="dropdown-item" href="main">水電進度</a>
                     <div class="dropdown-divider"></div>
                     <h6 class="dropdown-header">查詢</h6>
-                    <a class="dropdown-item" href>工程進度</a>
-                    <a class="dropdown-item" href>材料狀態</a>
-                    <a class="dropdown-item" href>水電進度</a>
-                    <a class="dropdown-item" href>結案工程</a>
+                    <a class="dropdown-item" href="main">工程進度</a>
+                    <a class="dropdown-item" href="main">材料狀態</a>
+                    <a class="dropdown-item" href="main">水電進度</a>
+                    <a class="dropdown-item" href="main">結案工程</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">愛惠浦</a>
                 <div class="dropdown-menu">
                     <h6 class="dropdown-header">濾芯更換</h6>
-                    <a class="dropdown-item" href>查詢</a>
-                    <a class="dropdown-item" href>需求增加</a>
-                    <a class="dropdown-item" href>結案列表</a>
+                    <a class="dropdown-item" href="main">查詢</a>
+                    <a class="dropdown-item" href="main">需求增加</a>
+                    <a class="dropdown-item" href="main">結案列表</a>
                     <h6 class="dropdown-header">客戶</h6>
                     <a class="dropdown-item" href="customerAdd">增加</a>
                     <a class="dropdown-item" href="customerManage">管理</a>
@@ -34,10 +34,11 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">記事</a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href>公司記事</a>
-                    <a class="dropdown-item" href>工程記事</a>
+                    <a class="dropdown-item" href="main">公司記事</a>
+                    <a class="dropdown-item" href="main">工程記事</a>
                 </div>
             </li>
+            %management_system%
         </ul>
         <span class="navbar-text logoutButton p-md-0 w-100">
             <a onclick="_logout()" class="nav-item d-block w-100 h-100 text-center rounded-circle" id="logoutButton">
@@ -66,7 +67,7 @@
         content: "登出"
     }
     
-    @media screen and (min-width:576px) {
+    @media screen and (min-width:768px) {
         #navDrop {
             overflow-y: initial
         }

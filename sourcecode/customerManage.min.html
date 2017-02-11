@@ -1,1 +1,38 @@
-<div class='row justify-content-md-center'><div class='col-12 col-md-auto'><div class='white_shadow_box p-5'><div class='row'><div class='col-12'><a>%data%</a></div></div></div></div></div>
+<div class='row justify-content-md-center'>
+<div class='col'>
+<div class='white_shadow_box'>
+<div class='row fillter w-100 align-items-center'>
+<div class='col h-100'>
+<div class='_search1'>
+<div class='row justify-content-md-center'>
+<div class='col-12 col-md'>
+<form class='d-flex h-100 bc-efefef' id='customerSearch'>
+<div class='input-group'>
+<input oninput='$(this).parent().parent().submit()' type='search' name='search' class='form-control' placeholder='Search for...'>
+<span class='input-group-btn'>
+<button type='submit' class='btn btn-primary'>搜索</button>
+</span>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+<table class='table table-striped table-responsive'>
+<thead>
+<tr>
+<th class='text-center col border-top-0 mw-75px'>名稱</th>
+<th class='text-center col col-auto border-top-0 mw-75px'>地址</th>
+<th class='text-center col col-auto border-top-0 mw-75px'>電話</th>
+<th class='text-center col col-auto border-top-0 mw-75px'>備註</th>
+<th class='text-center col col-auto border-top-0 mw-75px'>操作</th>
+</tr></thead>
+<tbody id='customerSearchResult'>
+%data%
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<script>function customerManageEdit(e){$(e).parent().removeClass("show"),$(e).parent().parent().find("._CMEdit").addClass("show"),$(e).parent().parent().parent().addClass("table-info"),$(e).parent().parent().parent().find("td:not(:last)").attr("contenteditable","true")}function customerManageEditSave(e){$(e).parent().removeClass("show"),$(e).parent().parent().find("._CMDefault").addClass("show"),$(e).parent().parent().parent().removeClass("table-info"),console.log($(e).parent().parent().parent().attr("data-id")),$(e).parent().parent().parent().find("td:not(:last)").attr("contenteditable","false")}function customerManageEditCancel(e){$(e).parent().removeClass("show"),$(e).parent().parent().find("._CMDefault").addClass("show"),$(e).parent().parent().parent().removeClass("table-info"),$(e).parent().parent().parent().find("td:not(:last)").attr("contenteditable","false")}function customerManageDelete(e){$(e).parent().removeClass("show"),$(e).parent().parent().find("._CMDelete").addClass("show"),$(e).parent().parent().parent().addClass("bg-warning")}function customerManageDeleteConfirm(e){$(e).parent().parent().parent().remove(),console.log($(e).parent().parent().parent().attr("data-id"))}function customerManageDeleteCancel(e){$(e).parent().removeClass("show"),$(e).parent().parent().find("._CMDefault").addClass("show"),$(e).parent().parent().parent().removeClass("bg-warning")}$("#customerSearch").validate({submitHandler:function(e){var a=e.search.value,t=dataStorage.customerManage.cache.searchData.filter(function(e){return!!(e.name.toLowerCase().match(a.toLowerCase())||e.address.toLowerCase().match(a.toLowerCase())||e.contact.toLowerCase().match(a.toLowerCase())||e.remark.toLowerCase().match(a.toLowerCase()))});$("#customerSearchResult").text(""),t.forEach(function(e){$("#customerSearchResult").append(e.html)})}})</script>

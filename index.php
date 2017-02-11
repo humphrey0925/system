@@ -1,34 +1,12 @@
 <?php
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 date_default_timezone_set("Asia/Taipei");
-header("charset=utf-8");
 $login = file_get_contents("sourcecode/loginform.min.html");
-$navbar = file_get_contents("sourcecode/navbar.min.html");
 $footer = file_get_contents("sourcecode/footer.min.html");
 $js_run_main = file_get_contents("sourcecode/js_run.min.js");
-$js_function = '<script>'.file_get_contents("sourcecode/js_function.min.js").'</script>' ;
-require_once('sourcecode/maininfo.php');
-require_once('sourcecode/customerAdd.php');
-require_once('sourcecode/customerManage.php');
+$js_function = '<script>'.file_get_contents("sourcecode/js_function.min.js").'</script><style>'.file_get_contents("sourcecode/css.min.css").'</style>' ;
 require_once('sourcecode/php_function.php');
-processCustomerManage();
-processCustomerAdd();
-
-// status value meaning
-// 0 -> login fail
-// 1 -> login success
-// 9 -> logout
-// content
-// 100 -> homepage
-// 101 -> customer add
-// 102 -> customer manage
-// image upload
-// 200 -> upload image success
-// 201 -> no permission
-// 202 -> image too big
-// 203 -> unsupported filetype
-// 204 -> network not stable
-// 205 -> upload image error
-
 if($_GET){
     header("Location: ./");
     exit();
@@ -36,7 +14,7 @@ if($_GET){
 // elseif (file_exists('upload/' . $_FILES['file_upload']['name'])){
 //         $data = array('msg'=>'File with that name already exists.','status'=>202);
 //     } 
-require_once 'db_connect.php';
+require_once './sourcecode/db_connect.php';
 $data = array();
 if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
     require_once("sourcecode/imageUpload.php");
@@ -57,13 +35,33 @@ if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {
         <link rel="stylesheet" href="css/font-awesome.min.css">
         <script src="js/jquery-3.1.0.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/tether.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/jquery.cookie.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/jquery.validate.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="js/custom.min.js" type="text/javascript" charset="utf-8" async defer></script>
+        <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-91209552-1', 'auto');
+        ga('send', 'pageview');
+        </script>
     </head>
 
-    <body><?php if( checkCookie() ) { main(); } else { login(); } ?></body>
-    </html><?php
+    <body>
+        <?php if( checkCookie() ) { main(); } else { login(); } ?>
+    </body>
+
+    </html>
+    <?php
 }
-require_once 'db_close.php';?>
+require_once './sourcecode/db_close.php';?>

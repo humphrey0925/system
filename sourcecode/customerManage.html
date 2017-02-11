@@ -1,11 +1,103 @@
 <div class="row justify-content-md-center">
-    <div class="col-12 col-md-auto">
-        <div class="white_shadow_box p-5">
-            <div class="row">
-                <div class="col-12">
-                    <a>%data%</a>
+    <div class="col">
+        <div class="white_shadow_box">
+            <div class="row fillter w-100 align-items-center">
+                <div class="col h-100">
+                    <div class="_search1">
+                        <div class="row justify-content-md-center">
+                            <div class="col-12 col-md">
+                                <form class="d-flex h-100 bc-efefef" id="customerSearch">
+                                    <!--<input type="search" name="search" class="form-control my-0 col" placeholder="Jane Doe">
+                                    <button type="submit" class="btn btn-primary col col-auto">搜索</button> -->
+                                    <div class="input-group">
+                                        <input oninput="$(this).parent().parent().submit();" type="search" name="search" class="form-control" placeholder="Search for...">
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary">搜索</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th class="text-center col border-top-0 mw-75px">名稱</th>
+                        <th class="text-center col col-auto border-top-0 mw-75px">地址</th>
+                        <th class="text-center col col-auto border-top-0 mw-75px">電話</th>
+                        <th class="text-center col col-auto border-top-0 mw-75px">備註</th>
+                        <th class="text-center col col-auto border-top-0 mw-75px">操作</th>
+                </thead>
+                <tbody id="customerSearchResult">
+                    %data%
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+<script>
+$("#customerSearch").validate({
+    submitHandler: function(form) {
+        var data = form.search.value;
+        var result = dataStorage.customerManage.cache.searchData.filter(function(index) {
+            if (
+                index.name.toLowerCase().match(data.toLowerCase()) ||
+                index.address.toLowerCase().match(data.toLowerCase()) ||
+                index.contact.toLowerCase().match(data.toLowerCase()) ||
+                index.remark.toLowerCase().match(data.toLowerCase())
+            ) {
+                return true
+            }
+            return false;
+        });
+        $('#customerSearchResult').text("");
+        result.forEach(function(element) {
+            $('#customerSearchResult').append(element.html);
+        });
+    }
+});
+
+function customerManageEdit(el) {
+    $(el).parent().removeClass('show')
+    $(el).parent().parent().find('._CMEdit').addClass('show');
+    $(el).parent().parent().parent().addClass('table-info');
+    $(el).parent().parent().parent().find('td:not(:last)').attr('contenteditable', 'true');
+    // $(el).parent().parent().parent().find('td:not(:nth-last-child(2))').attr('contenteditable', 'true');
+}
+
+function customerManageEditSave(el) {
+    $(el).parent().removeClass('show')
+    $(el).parent().parent().find('._CMDefault').addClass('show');
+    $(el).parent().parent().parent().removeClass('table-info');
+    console.log($(el).parent().parent().parent().attr('data-id'));
+    $(el).parent().parent().parent().find('td:not(:last)').attr('contenteditable', 'false');
+    // $(el).parent().parent().parent().find('td:not(:nth-last-child(2))').attr('contenteditable', 'false');
+}
+
+function customerManageEditCancel(el) {
+    $(el).parent().removeClass('show')
+    $(el).parent().parent().find('._CMDefault').addClass('show');
+    $(el).parent().parent().parent().removeClass('table-info')
+    $(el).parent().parent().parent().find('td:not(:last)').attr('contenteditable', 'false');
+    // $(el).parent().parent().parent().find('td:not(:nth-last-child(2))').attr('contenteditable', 'false');
+}
+
+function customerManageDelete(el) {
+    $(el).parent().removeClass('show')
+    $(el).parent().parent().find('._CMDelete').addClass('show');
+    $(el).parent().parent().parent().addClass('bg-warning')
+}
+
+function customerManageDeleteConfirm(el) {
+    $(el).parent().parent().parent().remove();
+    console.log($(el).parent().parent().parent().attr('data-id'));
+}
+
+function customerManageDeleteCancel(el) {
+    $(el).parent().removeClass('show')
+    $(el).parent().parent().find('._CMDefault').addClass('show');
+    $(el).parent().parent().parent().removeClass('bg-warning')
+}
+</script>
