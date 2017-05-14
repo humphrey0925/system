@@ -13,6 +13,7 @@
         }
     });
 })(jQuery);
+
 $.ajaxSetup({
     processData: false,
     contentType: false,

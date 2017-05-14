@@ -11,9 +11,6 @@ if($_GET){
     header("Location: ./");
     exit();
 }
-// elseif (file_exists('upload/' . $_FILES['file_upload']['name'])){
-//         $data = array('msg'=>'File with that name already exists.','status'=>202);
-//     } 
 require_once './sourcecode/db_connect.php';
 $data = array();
 if ( !empty($_FILES) && checkCookie() && IS_AJAX ) {

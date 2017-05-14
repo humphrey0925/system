@@ -3,8 +3,8 @@ function processMainInfo($name,$contact,$loginpcos,$loginip,$loginbrowser,$login
 ){
     $prevtime = date('l y/m/d h:i:sa',$prevtime);
     $logintime = date('l y/m/d h:i:sa',$logintime);
-    $profileblankimg = ($img=='') ? 'profileblank.jpg' : 'upload/'.$img ;
-    $uploadimageelement = ($img=='') ? '<input id="userimgupload" type="file" style="visibility:hidden;position:absolute" onchange="imageUpload(this)" accept="image/*"/><div class="rounded-circle" id="userimghover" onclick="$(\'#userimgupload\').click();" style="cursor:pointer;"></div>' : '' ;
+    $profileblankimg = ($img=='') ? 'profileblank.jpg' : 'upload/'.$img.'?'.time() ;
+    $uploadimageelement = (true) ? '<input id="userimgupload" type="file" style="visibility:hidden;position:absolute" onchange="imageUpload(this)" accept="image/*"/><div class="rounded-circle" id="userimghover" onclick="$(\'#userimgupload\').click();" style="cursor:pointer;"></div>' : '' ;
     $GLOBALS['maininfo'] = strtr(file_get_contents("sourcecode/maininfo.min.html"),array(
         '%profileblankimg%' => $profileblankimg,
         '%uploadimageelement%' => $uploadimageelement,
@@ -40,13 +40,9 @@ function processNavBar(){
     $GLOBALS['navbar'] = $response;
 }
 /*******************************************************************************************************************/
-function processCustomerAdd(){
-    $response = file_get_contents("sourcecode/customerAdd.min.html");
-    for ($i=1; $i <= 10; $i++) 
-        $response = strtr($response,array('%data%' => "$i customerAdd <br></a><a>%data%",));
-    $response = strtr($response,array('<a>%data%</a>' => "",));
-    $GLOBALS['customerAdd'] = $response;
-}
+function processCustomerAdd(){ $GLOBALS['customerAdd'] = file_get_contents("sourcecode/customerAdd.min.html"); }
+/*******************************************************************************************************************/
+function processSystemManagementUserAdd(){ $GLOBALS['systemManagementUserAdd'] = file_get_contents("sourcecode/systemManagementUserAdd.min.html"); }
 /*******************************************************************************************************************/
 function processCustomerManage(){
     $response = file_get_contents("sourcecode/customerManage.min.html");
@@ -55,24 +51,8 @@ function processCustomerManage(){
     if ($result = $GLOBALS['db']->query("SELECT `id`,`name`,`contact`,`address`,`remark` FROM `customer` WHERE `delete_status`=0")) {
         while ($row = $result->fetch_assoc()) {
             $rowData = "<tr data-id=\"{$row['id']}\"><td>{$row['name']}</td><td>{$row['address']}</td><td>{$row['contact']}</td><td>{$row['remark']}</td><td>$buttonSet</td></tr>";
-/*
-<td class='customerMultiSelect align-middle'>
-<label class='p-0 pr-2 m-0 custom-control custom-checkbox'>
-<input type='checkbox' class='custom-control-input'>
-<span class='custom-control-indicator'></span>
-</label>
-</td>
-*/
             $GLOBALS['searchData']['customerManage'][] = array('html' => $rowData, 'id' => $row['id'], 'name' => $row['name'], 'remark' => $row['remark'], 'contact' => $row['contact'], 'address' => $row['address'], );
-            // $GLOBALS['searchData']['customerManage']['id'][] = $row['id'];
-            // $GLOBALS['searchData']['customerManage']['html'][] = $rowData;
-            // $GLOBALS['searchData']['customerManage']['name'][] = $row['name'];
-            // $GLOBALS['searchData']['customerManage']['remark'][] = $row['remark'];
-            // $GLOBALS['searchData']['customerManage']['contact'][] = $row['contact'];
-            // $GLOBALS['searchData']['customerManage']['address'][] = $row['address'];
         }
-        // $retVal = (isset($GLOBALS['searchData']['customerManage']['html'])))) ? implode($GLOBALS['searchData']['customerManage']['html'])) : "" ;
-        // $response = strtr( $response,array('%data%' => (( isset($GLOBALS['searchData']['customerManage']) ) ? implode($GLOBALS['searchData']['customerManage']['html']) : "") ) );
         $str = "";
         foreach ($GLOBALS['searchData']['customerManage'] as $value) {
             $str .= $value['html'];
@@ -83,16 +63,24 @@ function processCustomerManage(){
     }
 }
 /*******************************************************************************************************************/
-function processSystemManagementUserAdd(){
-    $response = file_get_contents("sourcecode/systemManagementUserAdd.min.html");
-    $response = strtr($response,array('%systemManagementUser%' => "",));
-    $GLOBALS['systemManagementUserAdd'] = $response;
-}
-/*******************************************************************************************************************/
 function processSystemManagementUserManage(){
+    $buttonSet = '<div class="btn-group"><a onclick="adminConfirm(this,\'update\')" class="btn btn-primary">重置密碼</a><a onclick="adminConfirm(this,\'delete\')" class="btn btn-danger">刪除賬號</a></div>';
     $response = file_get_contents("sourcecode/systemManagementUserManage.min.html");
-    $response = strtr($response,array('%systemManagementUserManage%' => "",));
-    $GLOBALS['systemManagementUserManage'] = $response;
+    $currentUsername = getCurrentUser('username');
+    $currentUserLevel = getCurrentUser('level')*1;
+    if ($result = $GLOBALS['db']->query("SELECT `id`,`name`,`contact`,`username`,`level`,`logintime` FROM `user` WHERE `level`<>0 and `username`<>\"$currentUsername\"") && $currentUserLevel == 0) {
+        while ($row = $result->fetch_assoc()) {
+            $rowData = "<tr class=\"text-center\" data-id=\"{$row['id']}\"><td>{$row['username']}</td><td>{$row['name']}</td><td>{$row['contact']}</td><td>{$row['level']}</td><td>".date("Y/m/d H:i",$row['logintime'])."</td><td>$buttonSet</td></tr>";
+            $GLOBALS['searchData']['systemManagementUserManage'][] = array('html' => $rowData, 'id' => $row['id'], 'name' => $row['name'], 'username' => $row['username'], 'contact' => $row['contact'], 'logintime' => $row['logintime'], 'level' => $row['level'], );
+        }
+        $str = "";
+        foreach ($GLOBALS['searchData']['systemManagementUserManage'] as $value) {
+            $str .= $value['html'];
+        }
+        $response = strtr($response,array('%systemManagementUserManage%' => $str));
+        $GLOBALS['systemManagementUserManage'] = $response;
+        $result->free();
+    }
 }
 /*******************************************************************************************************************/
 function login(){
@@ -117,10 +105,6 @@ function main($mode=''){
         echo $GLOBALS['navbar'].'<div class="container-fluid">'.$GLOBALS['maininfo'].'</div>'.$GLOBALS['footer'].$GLOBALS['js_function'].'<script>'.$GLOBALS['js_run_main'].'</script>';
     }
     $query->close();
-}
-/*******************************************************************************************************************/
-function systemManagementAddNewUser(){
-    return;
 }
 /*******************************************************************************************************************/
 function checkIP() {
@@ -180,9 +164,22 @@ function checkCacheEqual($time,$el){
     return getSystemUpdateTime($el)==$time;
 }
 /*******************************************************************************************************************/
+function cacheNameConvert($name){
+    // print_r($_POST);
+    if ($name == 'systemManagementUserManage' ||
+        $name == 'main'
+    ) {
+        return 'user';
+    }
+    if ($name == 'customerManage') {
+        return 'customer';
+    }
+    return $name;
+}
+/*******************************************************************************************************************/
 function getSystemUpdateTime($col){
     $query = $GLOBALS['db']->prepare("SELECT `time` FROM `systemupdatetime` WHERE `name` = ?");
-    $query->bind_param("s", $col);
+    $query->bind_param("s", cacheNameConvert($col) );
     $query->execute();
     $query->store_result();
     $query->bind_result($data);
@@ -192,6 +189,11 @@ function getSystemUpdateTime($col){
         return 1;
     }
     return $data;
+}
+function updateTime($name){
+    $time = time();
+    $name = cacheNameConvert($name);
+    $GLOBALS['db']->query("UPDATE `systemupdatetime` SET `time` = $time WHERE `name` = \"{$name}\"");
 }
 /*******************************************************************************************************************/
 function removeImage($imagename){

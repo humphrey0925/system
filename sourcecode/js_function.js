@@ -1,11 +1,11 @@
 var dataStorage = {};
-var ajaxSuccess = function(data) {
+var ajaxSuccess = function(data, b, c) {
+    console.log(dataStorage, data, b, c)
     if (data.status != undefined) {
-        console.log(data, dataStorage)
         if (data.status == 1000) {
             data = dataStorage[data.el].cache;
-            console.log("cache")
         }
+
         if (data.status == 9) {
             $("body").animate({
                     opacity: 0
@@ -32,8 +32,6 @@ var ajaxSuccess = function(data) {
             }
         } else if (data.status >= 200 && data.status <= 205) {
             if (data.status == 200) {
-                $("#userimghover").remove();
-                $("#userimgupload").remove();
                 $("#userimg").css("background-image", "url(" + data.image_path + ")");
             } else {
                 alert(data.msg);

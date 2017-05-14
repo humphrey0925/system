@@ -35,6 +35,7 @@
     bottom: 100%;
     background-color: #efefef !important;
 }
+
 .bc-efefef {
     background-color: #efefef !important;
 }
@@ -47,6 +48,15 @@ div.btn-group:has(> label > input) {
     display: none;
     color: red!important;
 }
-.mw-75px{
+
+.mw-75px {
     min-width: 75px;
+}
+
+.mw-100px {
+    min-width: 100px;
+}
+
+.mw-125px {
+    min-width: 125px;
 }

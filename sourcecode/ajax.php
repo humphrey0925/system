@@ -18,65 +18,68 @@
 // 204 -> network not stable (MSG)
 // 205 -> upload image error (MSG)
 // system management
-// 901 -> customer add success (RETURN)
-// 901 -> customer add success (RETURN)
+// 900 -> customer add success (RETURN)
+// 901 -> customer add success but have some error (RETURN)
+// 902 -> system user add success (RETURN)
 // 999 -> system management user add success (RETURN)
 // **************************************************
+// 1000 -> have cache 
+// **************************************************
 if (isset($_POST['get']) && !empty($_POST['get']) && IS_AJAX && checkCookie()) {
+    $currentUserLevel = getCurrentUser('level')*1;
     if ($_POST['get'] == 'main') {
-        if (!checkCacheEqual($_POST['cacheTime'],$_POST['get'])) {
+        if (!checkCacheEqual($_POST['cacheTime'], $_POST['get'])) {
             main('main');
             $data = array(
                 'html' => $maininfo,
                 'status' => 100,
                 'cacheTime' => getSystemUpdateTime($_POST['get'])
             );
+        } else
+            $data = array(
+                'el' => $_POST['get'],
+                'status' => 1000
+            );
+    } elseif ($_POST['get'] == 'uniqueUsername' && $currentUserLevel == 0) { // newSystemUserAccount check unique
+        $query = $db->prepare("SELECT `username` FROM `user` WHERE `username` = ?");
+        $query->bind_param("s", $username);
+        $username = strtolower($_POST['uniqueUsername']);
+        $query->execute();
+        $query->store_result();
+        if ($query->num_rows() == 0) {
+            echo 'true';
         }
-        else $data = array(
-            'el' => $_POST['get'],
-            'status' => 1000
-        );
-    }
-    elseif ($_POST['get'] == 'customerAdd') {
-        if (!checkCacheEqual($_POST['cacheTime'],$_POST['get'])) {
+        $query->close();
+        require_once './sourcecode/db_close.php';
+        exit();
+    } elseif ($_POST['get'] == 'customerAdd') {
+        if (!checkCacheEqual($_POST['cacheTime'], $_POST['get'])) {
             processCustomerAdd();
             $data = array(
                 'html' => $customerAdd,
                 'status' => 101,
                 'cacheTime' => getSystemUpdateTime($_POST['get'])
             );
-        }
-        else $data = array(
-            'el' => $_POST['get'],
-            'status' => 1000
-        );
-
-
-
-
-            // processCustomerAdd();
-            // $data = array(
-            //     'html' => $customerAdd,
-            //     'status' => 101,
-            // );
-    }
-    elseif ($_POST['get'] == 'systemManagementUserAdd') {
-        if (!checkCacheEqual($_POST['cacheTime'],$_POST['get'])) {
+        } else
+            $data = array(
+                'el' => $_POST['get'],
+                'status' => 1000
+            );
+    } elseif ($_POST['get'] == 'systemManagementUserAdd' && $currentUserLevel == 0) {
+        if (!checkCacheEqual($_POST['cacheTime'], $_POST['get'])) {
             processSystemManagementUserAdd();
             $data = array(
                 'html' => $systemManagementUserAdd,
                 'status' => 103,
                 'cacheTime' => getSystemUpdateTime($_POST['get'])
             );
-        }
-        else $data = array(
-            'el' => $_POST['get'],
-            'status' => 1000
-        );
-
-    }
-    elseif ($_POST['get'] == 'customerManage') {
-        if (!checkCacheEqual($_POST['cacheTime'],$_POST['get'])) {
+        } else
+            $data = array(
+                'el' => $_POST['get'],
+                'status' => 1000
+            );
+    } elseif ($_POST['get'] == 'customerManage') {
+        if (!checkCacheEqual($_POST['cacheTime'], $_POST['get'])) {
             processCustomerManage();
             $data = array(
                 'html' => $customerManage,
@@ -84,78 +87,109 @@ if (isset($_POST['get']) && !empty($_POST['get']) && IS_AJAX && checkCookie()) {
                 'cacheTime' => getSystemUpdateTime($_POST['get']),
                 'searchData' => (isset($GLOBALS['searchData']['customerManage'])) ? $GLOBALS['searchData']['customerManage'] : ""
             );
-        }
-        else $data = array(
-            'el' => $_POST['get'],
-            'status' => 1000
-        );
-    }
-    elseif ($_POST['get'] == 'systemManagementUserManage') {
-        if (!checkCacheEqual($_POST['cacheTime'],$_POST['get'])) {
+        } else
+            $data = array(
+                'el' => $_POST['get'],
+                'status' => 1000
+            );
+    } elseif ($_POST['get'] == 'systemManagementUserManage') {
+        if (!checkCacheEqual($_POST['cacheTime'], $_POST['get'])) {
             processSystemManagementUserManage();
             $data = array(
                 'html' => $systemManagementUserManage,
                 'status' => 104,
-                'cacheTime' => getSystemUpdateTime($_POST['get'])
+                'cacheTime' => getSystemUpdateTime($_POST['get']),
+                'searchData' => (isset($GLOBALS['searchData']['systemManagementUserManage'])) ? $GLOBALS['searchData']['systemManagementUserManage'] : ""
             );
-        }
-        else $data = array(
-            'el' => $_POST['get'],
-            'status' => 1000
-        );
+        } else
+            $data = array(
+                'el' => $_POST['get'],
+                'status' => 1000
+            );
     }
 } elseif (isset($_POST['add']) && !empty($_POST['add']) && IS_AJAX && checkCookie()) {
-    if ( $_POST['add'] == 'customer' ) {
+    $currentUserLevel = getCurrentUser('level')*1;
+
+    if ($_POST['add'] == 'customer') {
         $query = $db->prepare("INSERT INTO `customer` (`name`, `contact`, `address`, `remark`) VALUES (?, ?, ?, ?)");
-        $data = array('status'=>900); 
+        $data  = array(
+            'status' => 900
+        );
         if ($_POST['multi']) {
-            $namearr = explode("|",$_POST['name']);
-            $contactarr = explode("|",$_POST['contact']);
-            $addressarr = explode("|",$_POST['address']);
-            $remarkarr = explode("|",$_POST['remark']);
-            $query->bind_param("ssss", $name,$contact, $address,$remark);
-            $invalid = [];
+            $namearr    = explode("|", $_POST['name']);
+            $contactarr = explode("|", $_POST['contact']);
+            $addressarr = explode("|", $_POST['address']);
+            $remarkarr  = explode("|", $_POST['remark']);
+            $query->bind_param("ssss", $name, $contact, $address, $remark);
+            $invalid = array();
             foreach ($namearr as $key => $value) {
-                $name = $value;
-                $contact = (isset($contactarr[$key])) ? $contactarr[$key] : "" ;
-                $address = (isset($addressarr[$key])) ? $addressarr[$key] : "" ;
-                $remark = (isset($remarkarr[$key])) ? $remarkarr[$key] : "" ;
+                $name    = $value;
+                $contact = (isset($contactarr[$key])) ? $contactarr[$key] : "";
+                $address = (isset($addressarr[$key])) ? $addressarr[$key] : "";
+                $remark  = (isset($remarkarr[$key])) ? $remarkarr[$key] : "";
                 if ($name != "") {
                     $query->execute();
                     $_time = time();
-                    $db->query("UPDATE `systemupdatetime` SET `time` = {$_time} WHERE `name` = \"customerManage\"");
-
-                }elseif ($contact != "" || $address != "" || $remark != "") {
-                    array_push($invalid,array('name'=>$name,'contact'=>$contact,'address'=>$address,'remark'=>$remark));
+                    updateTime("customerManage");
+                    // $db->query("UPDATE `systemupdatetime` SET `time` = {$_time} WHERE `name` = \"customerManage\"");
+                } elseif ($contact != "" || $address != "" || $remark != "") {
+                    array_push($invalid, array(
+                        'name' => $name,
+                        'contact' => $contact,
+                        'address' => $address,
+                        'remark' => $remark
+                    ));
                 }
             }
-            if (count($invalid)>0) {
-                $name = $invalid[0]['name'];
+            if (count($invalid) > 0) {
+                $name    = $invalid[0]['name'];
                 $contact = $invalid[0]['contact'];
                 $address = $invalid[0]['address'];
-                $remark = $invalid[0]['remark'];
-                for ($i=1; $i < count($invalid); $i++) { 
+                $remark  = $invalid[0]['remark'];
+                for ($i = 1; $i < count($invalid); $i++) {
                     $name .= "|{$invalid[$i]['name']}";
                     $contact .= "|{$invalid[$i]['contact']}";
                     $address .= "|{$invalid[$i]['address']}";
                     $remark .= "|{$invalid[$i]['remark']}";
                 }
-                $invalid = array('name'=>$name,'contact'=>$contact,'address'=>$address,'remark'=>$remark);
-                $data = array('status'=>901,'invalid'=>$invalid);
+                $invalid = array(
+                    'name' => $name,
+                    'contact' => $contact,
+                    'address' => $address,
+                    'remark' => $remark
+                );
+                $data    = array(
+                    'status' => 901,
+                    'invalid' => $invalid
+                );
             }
         } else {
-            $query->bind_param("ssss", $name,$contact, $address,$remark);
-            $name = $_POST['name'];
+            $query->bind_param("ssss", $name, $contact, $address, $remark);
+            $name    = $_POST['name'];
             $contact = $_POST['contact'];
             $address = $_POST['address'];
-            $remark = $_POST['remark'];
+            $remark  = $_POST['remark'];
             $query->execute();
             $_time = time();
-            $db->query("UPDATE `systemupdatetime` SET `time` = {$_time} WHERE `name` = \"customerManage\"");
+            updateTime("customerManage");
+            // $db->query("UPDATE `systemupdatetime` SET `time` = {$_time} WHERE `name` = \"customerManage\"");
         }
+    } elseif ($_POST['add'] == 'systemManagementUser' && $currentUserLevel == 0) {
+        $query = $db->prepare("INSERT INTO `user` (`name`, `contact`, `level`, `username`, `password`,`loginpcos`,`loginip`,`loginbrowser`,`logintime`,`loginkey`) VALUES (?, ?, ?, ?, ?,'N/A','N/A','N/A','N/A','N/A')");
+        $query->bind_param("ssiss", $name, $contact, $level, $username, $password);
+        $name     = $_POST['name'];
+        $contact  = $_POST['contact'];
+        $level    = $_POST['level'];
+        $username = strtolower($_POST['username']);
+        $password = 123456;
+        $password = crypt($password, '$6$' . $username . '$' . $password . '$');
+        $query->execute();
+        updateTime("user");
+        $data           = $_POST;
+        $data['status'] = 902;
     }
 } elseif (isset($_POST['update']) && !empty($_POST['update']) && IS_AJAX && checkCookie()) {
-    if ( $_POST['update'] == 'customer' ) {
+    if ($_POST['update'] == 'customer') {
         // $query = $db->prepare("INSERT INTO `customer` (`name`, `contact`, `address`, `remark`) VALUES (?, ?, ?, ?)");
         // $data = array('status'=>900); 
         // if ($_POST['multi']) {
@@ -200,7 +234,7 @@ if (isset($_POST['get']) && !empty($_POST['get']) && IS_AJAX && checkCookie()) {
         // }
     }
 } elseif (isset($_POST['delete']) && !empty($_POST['delete']) && IS_AJAX && checkCookie()) {
-    if ( $_POST['delete'] == 'customer' ) {
+    if ($_POST['delete'] == 'customer') {
         // $query = $db->prepare("INSERT INTO `customer` (`name`, `contact`, `address`, `remark`) VALUES (?, ?, ?, ?)");
         // $data = array('status'=>900); 
         // if ($_POST['multi']) {
@@ -244,69 +278,74 @@ if (isset($_POST['get']) && !empty($_POST['get']) && IS_AJAX && checkCookie()) {
         //     $query->execute();
         // }
     }
-} elseif ( isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['password']) && !empty($_POST['password']) && IS_AJAX ) {
-    $query = $db->prepare("SELECT `id`,`name`,`contact`,`username`,`password`,`level`,`userstatus`,`loginpcos`,`loginip`,`loginbrowser`,`logintime`,`loginkey`,`prevpcos`,`previp`,`prevbrowser`,`prevtime`,`prevkey`,`image` FROM `user` WHERE `username` = ? and `password` = ?");
-    $query->bind_param("ss", $username,$password);
+} elseif (isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['password']) && !empty($_POST['password']) && IS_AJAX) {
+    $query = $db->prepare("SELECT `id`,`name`,`contact`,`username`,`password`,`level`,`userstatus`,`loginpcos`,`loginip`,`loginbrowser`,`logintime`,`loginkey`,`prevpcos`,`previp`,`prevbrowser`,`prevtime`,`prevkey`,`image` FROM `user` WHERE `username` = ? and `password` = ? and `level`<>0");
+    $query->bind_param("ss", $username, $password);
     $username = strtolower($_POST['username']);
     $password = $_POST['password'];
-    $password = crypt($password, '$6$'.$username.'$'.$password.'$');
+    $password = crypt($password, '$6$' . $username . '$' . $password . '$');
     $query->execute();
     $query->store_result();
-    if($query->num_rows()===1){
-        $query->bind_result($id,$name,$contact,$username,$password,$level,$userstatus,$loginpcos,$loginip,$loginbrowser,$logintime,$loginkey,$prevpcos,$previp,$prevbrowser,$prevtime,$prevkey,$img
-        );
+    if ($query->num_rows() === 1) {
+        $query->bind_result($id, $name, $contact, $username, $password, $level, $userstatus, $loginpcos, $loginip, $loginbrowser, $logintime, $loginkey, $prevpcos, $previp, $prevbrowser, $prevtime, $prevkey, $img);
         $query->fetch();
-        $clientOS = getOS();
-        $clientip = checkIP();
+        $clientOS          = getOS();
+        $clientip          = checkIP();
         $clientrequesttime = $_SERVER['REQUEST_TIME'];
-        if(strpos($_SERVER["HTTP_USER_AGENT"],"MSIE"))
+        if (strpos($_SERVER["HTTP_USER_AGENT"], "MSIE"))
             $clientbrowser = "IE";
-        elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Firefox"))
+        elseif (strpos($_SERVER["HTTP_USER_AGENT"], "Firefox"))
             $clientbrowser = "Firefox";
-        elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Chrome"))
+        elseif (strpos($_SERVER["HTTP_USER_AGENT"], "Chrome"))
             $clientbrowser = "Chrome";
-        elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Safari"))
+        elseif (strpos($_SERVER["HTTP_USER_AGENT"], "Safari"))
             $clientbrowser = "Safari";
-        elseif(strpos($_SERVER["HTTP_USER_AGENT"],"Opera"))
+        elseif (strpos($_SERVER["HTTP_USER_AGENT"], "Opera"))
             $clientbrowser = "Opera";
-        else $clientbrowser = 'N/A';
-        
-        $md5 = md5($id.$name.$contact.$username.$password.$level.$clientOS.$clientip.$clientbrowser.$clientrequesttime.$loginkey
-        );
-        $key = crypt($password, '$6$'.$md5.'$'.$loginkey.'$');
+        else
+            $clientbrowser = 'N/A';
+        $md5        = md5($id . $name . $contact . $username . $password . $level . $clientOS . $clientip . $clientbrowser . $clientrequesttime . $loginkey);
+        $key        = crypt($password, '$6$' . $md5 . '$' . $loginkey . '$');
         $loginQuery = $db->prepare("
             update `user` set `loginip`=?,`loginbrowser`=?,`logintime`=?,`loginkey`=?,`loginpcos`=?,`previp`=?,`prevbrowser`=?,`prevtime`=?,`prevkey`=?,`prevpcos`=?,`userstatus`=1 where `id`=$id");
-        $loginQuery->bind_param(
-            "ssissssiss",$clientip,$clientbrowser,$clientrequesttime,$key,$clientOS,$loginip,$loginbrowser,$logintime,$loginkey,$loginpcos
-        );
+        $loginQuery->bind_param("ssissssiss", $clientip, $clientbrowser, $clientrequesttime, $key, $clientOS, $loginip, $loginbrowser, $logintime, $loginkey, $loginpcos);
         $loginQuery->execute();
-        processMainInfo($name,$contact,$clientOS,$clientip,$clientbrowser,$clientrequesttime,$loginpcos,$loginip,$loginbrowser,$logintime,$img
-        );
+        processMainInfo($name, $contact, $clientOS, $clientip, $clientbrowser, $clientrequesttime, $loginpcos, $loginip, $loginbrowser, $logintime, $img);
         processNavBar();
-        $data = array('html'=>$navbar.'<div class="container-fluid">'.$maininfo.'</div>'.$footer.$js_function,'status'=>1,'tmp'=>$js_run_main);
-        if ( isset($_POST['remember']) && 
-            !empty($_POST['remember']) ) {
+        $data = array(
+            'html' => $navbar . '<div class="container-fluid">' . $maininfo . '</div>' . $footer . $js_function,
+            'status' => 1,
+            'tmp' => $js_run_main
+        );
+        if (isset($_POST['remember']) && !empty($_POST['remember'])) {
             $data['key'] = $key;
-        }else{
-            $data['session'] = $key;}
+        } else {
+            $data['session'] = $key;
+        }
         $loginQuery->close();
-    }else{
-        $data = array('status'=>0);
+    } else {
+        $data = array(
+            'status' => 0
+        );
     }
     $query->close();
 } else { // logout code
-    if (isset($_COOKIE['_key'])&&!empty($_COOKIE['_key']) || isset($_COOKIE['session'])&&!empty($_COOKIE['session'])) {
+    if (isset($_COOKIE['_key']) && !empty($_COOKIE['_key']) || isset($_COOKIE['session']) && !empty($_COOKIE['session'])) {
         $query = $GLOBALS['db']->prepare("UPDATE `user` set `userstatus`=0 WHERE `loginkey` = ?");
-        if (isset($_COOKIE['_key'])&&!empty($_COOKIE['_key'])) {
-            $query->bind_param("s", $_COOKIE['_key']);}
-        elseif (isset($_COOKIE['session'])&&!empty($_COOKIE['session'])){
-            $query->bind_param("s", $_COOKIE['session']);}
-        else{
-            $query->bind_param("s", $_POST['logout']);}
+        if (isset($_COOKIE['_key']) && !empty($_COOKIE['_key'])) {
+            $query->bind_param("s", $_COOKIE['_key']);
+        } elseif (isset($_COOKIE['session']) && !empty($_COOKIE['session'])) {
+            $query->bind_param("s", $_COOKIE['session']);
+        } else {
+            $query->bind_param("s", $_POST['logout']);
+        }
         $query->execute();
         $query->close();
     }
-    $data = array('status'=>9,'html'=>$login);
+    $data = array(
+        'status' => 9,
+        'html' => $login
+    );
 }
 echo json_encode($data);
 ?>

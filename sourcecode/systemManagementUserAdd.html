@@ -1,100 +1,126 @@
-<script>
-function systemManagementAddNewUser(form) {
-    console.log(form)
-    var ajaxData = {
-        data: new FormData(form),method:'POST'
-    }
-    $.ajax(ajaxData).always(ajaxSuccess);
-
-    return false;
-}
-</script>
 <div class="row justify-content-md-center">
     <div class="col" style="max-width: 768px;">
         <div class="p-3 white_shadow_box">
-            <form onsubmit="return systemManagementAddNewUser(this)">
+            <form id="systemManagementUserAdd" onreset="resetForm(this)">
                 <div class="form-group row">
-                    <label for="example-text-input" class="col-12 col-sm-2 col-form-label">Text</label>
+                    <label for="name" class="col-12 col-sm-2 col-form-label">名稱</label>
                     <div class="col">
-                        <input class="form-control" type="text" value="Artisanal kale" id="example-text-input" name="example-text-input">
+                        <input placeholder="名稱" class="form-control" type="text" id="name" name="name" autofocus>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="example-search-input" class="col-12 col-sm-2 col-form-label">Search</label>
+                    <label for="contact" class="col-12 col-sm-2 col-form-label">聯絡電話</label>
                     <div class="col">
-                        <input class="form-control" type="search" value="How do I shoot web" id="example-search-input" name="example-search-input">
+                        <input placeholder="聯絡" class="form-control" type="text" id="contact" name="contact">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="example-email-input" class="col-12 col-sm-2 col-form-label">Email</label>
+                    <label for="username" class="col-12 col-sm-2 col-form-label">賬戶名稱</label>
                     <div class="col">
-                        <input class="form-control" type="email" value="bootstrap@example.com" id="example-email-input" name="example-email-input">
+                        <input placeholder="賬戶名稱" class="form-control" type="text" id="username" name="username">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="example-url-input" class="col-12 col-sm-2 col-form-label">URL</label>
+                    <label for="level" class="col-12 col-sm-2 col-form-label">等級</label>
                     <div class="col">
-                        <input class="form-control" type="url" value="https://getbootstrap.com" id="example-url-input" name="example-url-input">
+                        <select class="form-control" id="level" name="level">
+                            <option value="">請選擇權限</option>
+                            <option value="1">管理員1</option>
+                            <option value="2">管理員2</option>
+                            <option value="3">管理員3</option>
+                        </select>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="example-tel-input" class="col-12 col-sm-2 col-form-label">Telephone</label>
-                    <div class="col">
-                        <input class="form-control" type="tel" value="1-(555)-555-5555" id="example-tel-input" name="example-tel-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-password-input" class="col-12 col-sm-2 col-form-label">Password</label>
-                    <div class="col">
-                        <input class="form-control" type="password" value="hunter2" id="example-password-input" name="example-password-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-number-input" class="col-12 col-sm-2 col-form-label">Number</label>
-                    <div class="col">
-                        <input class="form-control" type="number" value="42" id="example-number-input" name="example-number-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-datetime-local-input" class="col-12 col-sm-2 col-form-label">Date and time</label>
-                    <div class="col">
-                        <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input" name="example-datetime-local-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-date-input" class="col-12 col-sm-2 col-form-label">Date</label>
-                    <div class="col">
-                        <input class="form-control" type="date" value="2011-08-19" id="example-date-input" name="example-date-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-month-input" class="col-12 col-sm-2 col-form-label">Month</label>
-                    <div class="col">
-                        <input class="form-control" type="month" value="2011-08" id="example-month-input" name="example-month-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-week-input" class="col-12 col-sm-2 col-form-label">Week</label>
-                    <div class="col">
-                        <input class="form-control" type="week" value="2011-W33" id="example-week-input" name="example-week-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-time-input" class="col-12 col-sm-2 col-form-label">Time</label>
-                    <div class="col">
-                        <input class="form-control" type="time" value="13:45:00" id="example-time-input" name="example-time-input">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="example-color-input" class="col-12 col-sm-2 col-form-label">Color</label>
-                    <div class="col">
-                        <input class="form-control" type="color" value="#563d7c" id="example-color-input" name="example-color-input">
-                    </div>
-                </div>
-                <input type="hidden" name="put" value="qweasd">
+                <input type="hidden" name="add" value="systemManagementUser">
                 <button type="reset" class="btn btn-secondary btn-lg btn-block">重置</button>
                 <button type="submit" class="btn btn-primary btn-lg btn-block">新建</button>
             </form>
         </div>
     </div>
 </div>
+<script>
+// $.validator.addMethod('uniqueUsername', function(value, el) {
+//     if ($(el).length > 0) {
+//         var ajaxData = {
+//             async: false,
+//             data: new FormData()
+//         }
+//         ajaxData.data.append("get", "uniqueUsername");
+//         ajaxData.data.append("uniqueUsername", $(el).val());
+//         $.ajax(ajaxData).always(function(re) {
+//             console.log(re)
+//             return (re.count == 0) ? true : false
+//         });
+
+//     }
+// }, '賬號重複');
+$("#systemManagementUserAdd").validate({
+    // onkeyup: false,
+    rules: {
+        username: {
+            required: true,
+            remote: function(el) {
+                return {
+                    dataType: 'html',
+                    processData: true,
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: {
+                        get: 'uniqueUsername',
+                        uniqueUsername: function() {
+                            return $(el).val();
+                        }
+                    }
+                };
+            },
+        },
+        contact: {
+            required: true,
+        },
+        name: {
+            required: true,
+        },
+        level: {
+            required: true,
+        },
+    },
+    messages: {
+        username: {
+            required: "不可為空",
+            remote: jQuery.validator.format("{0}已被使用")
+        },
+        contact: "不可無聯絡",
+        name: "不可無名字",
+        level: "不可無權限",
+    },
+    highlight: function(element) {
+        $(element).addClass('form-control-danger');
+        $(element).closest('.form-group').addClass('has-danger');
+    },
+    unhighlight: function(element) {
+        $(element).removeClass('form-control-danger');
+        $(element).closest('.form-group').removeClass('has-danger');
+    },
+    errorElement: "div",
+    errorClass: "form-control-feedback",
+    errorPlacement: function(error, element) {
+        if (element.parent('.input-group').length) {
+            error.insertAfter(element.parent());
+        } else {
+            error.insertAfter(element);
+        }
+    },
+    submitHandler: function(form) {
+        var ajaxData = {
+            data: new FormData(form),
+            method: 'POST'
+        }
+        $.ajax(ajaxData).always(ajaxSuccess).done(function(re) {
+            form.reset();
+            console.log(re)
+        });
+
+    }
+});
+
+function resetForm(form) {}
+</script>

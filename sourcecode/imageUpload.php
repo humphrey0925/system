@@ -28,6 +28,8 @@ if($_FILES['image']['error'] > 0){
         $loginQuery->bind_param("s",$imagename);
         $loginQuery->execute();
         $data = array('status'=>200,'image_path'=>"img/upload/$imagename".'?cache='.time());
+                updateTime("user");
+
     }
 }
 echo json_encode($data);
